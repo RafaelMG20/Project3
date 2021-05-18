@@ -76,6 +76,18 @@ public class algBaseListener implements algListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIdentifier(alg.IdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdentifier(alg.IdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterMulDiv(alg.MulDivContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -371,6 +383,18 @@ public class algBaseListener implements algListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitComparations(alg.ComparationsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBooV(alg.BooVContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBooV(alg.BooVContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

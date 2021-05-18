@@ -64,6 +64,18 @@ public interface algListener extends ParseTreeListener {
 	 */
 	void exitParenteses(alg.ParentesesContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code Identifier}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifier(alg.IdentifierContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Identifier}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifier(alg.IdentifierContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code MulDiv}
 	 * labeled alternative in {@link alg#expr}.
 	 * @param ctx the parse tree
@@ -327,6 +339,16 @@ public interface algListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitComparations(alg.ComparationsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link alg#booV}.
+	 * @param ctx the parse tree
+	 */
+	void enterBooV(alg.BooVContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link alg#booV}.
+	 * @param ctx the parse tree
+	 */
+	void exitBooV(alg.BooVContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link alg#logics}.
 	 * @param ctx the parse tree

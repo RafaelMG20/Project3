@@ -100,8 +100,8 @@ public class TypeChecker extends algBaseListener {
     public void enterAddSub(alg.AddSubContext ctx) { }
 
     public void exitAddSub(alg.AddSubContext ctx) {
-        Symbol.PType e1 = this.exprType.get(ctx.expr(0));
-        Symbol.PType e2 = this.exprType.get(ctx.expr(1));
+        Symbol.PType e1 = (Symbol.PType)this.exprType.get(ctx.expr(0));
+        Symbol.PType e2 = (Symbol.PType)this.exprType.get(ctx.expr(1));
         String operator = ((ParseTree)ctx.children.get(1)).getText();
         this.verifyPrimitiveArithmeticOperator(ctx, operator, e1, e2);
     }
@@ -111,14 +111,35 @@ public class TypeChecker extends algBaseListener {
     public void enterFuncInv(alg.FuncInvContext ctx) { }
     public void exitFuncInv(alg.FuncInvContext ctx) { }
     public void enterPointer(alg.PointerContext ctx) { }
-    public void exitPointer(alg.PointerContext ctx) { }
+
+    public void exitPointer(alg.PointerContext ctx)
+    {
+
+    }
+
     public void enterInt(alg.IntContext ctx) { }
 
     public void exitInt(alg.IntContext ctx) {
         exprType.put(ctx, Symbol.PType.INT);
     }
     public void enterParen(alg.ParenContext ctx) { }
-    public void exitParen(alg.ParenContext ctx) { }
+
+
+    public void exitParen(alg.ParenContext ctx) {
+        Symbol.PType e1 = (Symbol.PType)this.exprType.get(ctx.expr().getChild(0));
+        Symbol.PType e2 = (Symbol.PType)this.exprType.get(ctx.expr().getChild(2));
+        String operator = ((ParseTree)ctx.expr().children.get(1)).getText();
+        this.verifyPrimitiveArithmeticOperator(ctx, operator, e1, e2);
+    }
+
+    public void enterIdentifier(alg.IdentifierContext ctx) { }
+
+    public void exitIdentifier(alg.IdentifierContext ctx)
+    {
+        Symbol.PType e1 = (Symbol.PType)this.exprType.get(ctx.ide().getChild(1));
+        exprType.put(ctx, e1);
+    }
+
     public void enterEquals(alg.EqualsContext ctx) { }
     public void exitEquals(alg.EqualsContext ctx) { }
 
@@ -163,13 +184,31 @@ public class TypeChecker extends algBaseListener {
 
     public void exitCadeia_caracteres(alg.Cadeia_caracteresContext ctx)
     {
+        if(ctx.equals_string().CADEIA_CARACTERES() == null)
+        {
+            Symbol s = this.currentScope.resolve(ctx.IDENT(0).getText());
+            if(s != null) // entra se houver um simbolo s com esse nome
+            {
+                if(s.type.equals(Symbol.PType.STRING)) // entra se o type for string
+                {
+                    System.err.println("A variável " + ctx.IDENT(0).getText() + " na linha " + ctx.IDENT(0).getSymbol().getLine() + " é do tipo " + s.type);
+                    ++this.semanticErrors;
+                    return;
+                }
+            }
 
+           else{ System.err.println("A variável " + ctx.IDENT(0).getText() + " na linha " + ctx.IDENT(0).getSymbol().getLine() + " é do tipo STRING");
+            ++this.semanticErrors;}
+        }
     }
 
     public void enterCadeias_caracteres(alg.Cadeias_caracteresContext ctx) { }
     public void exitCadeias_caracteres(alg.Cadeias_caracteresContext ctx) { }
     public void enterPonteiro_inteiro(alg.Ponteiro_inteiroContext ctx) { }
-    public void exitPonteiro_inteiro(alg.Ponteiro_inteiroContext ctx) { }
+
+    public void exitPonteiro_inteiro(alg.Ponteiro_inteiroContext ctx) {
+     }
+
     public void enterPonteiro_real(alg.Ponteiro_realContext ctx) { }
     public void exitPonteiro_real(alg.Ponteiro_realContext ctx) { }
     public void enterPonteiro_cadeia(alg.Ponteiro_cadeiaContext ctx) { }

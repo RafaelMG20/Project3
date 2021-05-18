@@ -55,6 +55,7 @@ E_LOGICO=54
 OU_LOGICO=55
 D_MAIORQ=56
 WS=57
+COMMENTS=58
 'int'=1
 'bool'=2
 'float'=3

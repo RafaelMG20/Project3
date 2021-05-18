@@ -1,5 +1,4 @@
-// Generated from C:\Users\sopos\IdeaProjects\Project2Final\algLexer.g4 by ANTLR 4.9.1
-package alg;
+// Generated from C:/Users/sopos/IdeaProjects/Project2Final\algLexer.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

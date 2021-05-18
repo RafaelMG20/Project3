@@ -44,6 +44,13 @@ public interface algVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParenteses(alg.ParentesesContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code Identifier}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifier(alg.IdentifierContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code MulDiv}
 	 * labeled alternative in {@link alg#expr}.
 	 * @param ctx the parse tree
@@ -200,6 +207,12 @@ public interface algVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitComparations(alg.ComparationsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link alg#booV}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBooV(alg.BooVContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link alg#logics}.
 	 * @param ctx the parse tree

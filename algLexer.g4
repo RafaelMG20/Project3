@@ -78,7 +78,7 @@ LP : '(';
 RP : ')';
 INDEX_POINT_L: '[';
 INDEX_POINT_R: ']';
-IDEY: '~' | '?';
+IDEY: '~'|'?';
 MULT_DIV : '*' | '/' | '%';
 SOMA_SUB : '+' | '-';
 EQUAL_DIF : '==' | '!=' ;
@@ -86,6 +86,7 @@ COMPARATOR :  '>=' | '<=';
 E_LOGICO : '&&';
 OU_LOGICO : '||';
 D_MAIORQ: '>>';
+
 
 
 WS : [ \t\r\n] -> skip;

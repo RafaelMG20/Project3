@@ -40,12 +40,12 @@ expr: ID '(' exprList? ')'      # Call
     | IDENT                     # Var
     | LITERAL_INTEIRO           # Int
     | LITERAL_DECIMAL           # Float
+    | ide                       # Identifier
 
     ;
 
 
 exprList : expr (',' expr)*;
-rafa: expr;
 
 // exemplo de não fatoração À esquerda
 
@@ -83,8 +83,12 @@ ponteiro_cadeia : MENORQ STRING MAIORQ IDENT (EQUAL (CADEIA_CARACTERES|NULL | ('
 //expressions: (expr|op_paranteses|op_pointer|ide)((MULT_DIV | SOMA_SUB) (expr|op_paranteses|op_pointer|ide))* PONTO_VIRGULA;
 op_paranteses : LP (expr*) RP;
 op_pointer : INDEX_POINT_L (expr*) INDEX_POINT_R;
-ide : (SOMA_SUB|IDEY) (IDENT|((IDENT|LITERAL_INTEIRO) op_pointer) | LITERAL_INTEIRO);
-comparations : (expr|op_paranteses|op_pointer|ide) (MENORQ | MAIORQ | EQUAL_DIF | COMPARATOR) (IDENT|expr|op_paranteses|op_pointer|ide) ;
+//ide : (SOMA_SUB|IDEY) (IDENT|((IDENT|LITERAL_INTEIRO) op_pointer) | LITERAL_INTEIRO);
+// ide foi alterado
+ide : (SOMA_SUB|IDEY) expr?;
+
+comparations : (expr|op_paranteses|op_pointer|ide) (MENORQ | MAIORQ | EQUAL_DIF | COMPARATOR) (IDENT|expr|op_paranteses|op_pointer|ide|booV) ;
+booV : TRUE | FALSE;
 
 logics : LP (expr*) (E_LOGICO|OU_LOGICO) (expr*) RP EQUAL_DIF ('true'|'false') ;
 
@@ -112,7 +116,7 @@ attributes : ((IDENT |op_pointer) EQUAL expressions_list2) PONTO_VIRGULA;
 
 instructions : expressions_list | ctrl_instruct | attributes | if_cond | loop | sub_block;
 
-if_cond : IF LP ((expressions_list ((E_LOGICO|OU_LOGICO) expressions_list)*) | logics ) RP THEN instructions (ELSE instructions)?;
+if_cond : IF LP ((comparations ((E_LOGICO|OU_LOGICO) comparations)*) | logics ) RP THEN instructions (ELSE instructions)?;
 
 loop : WHILE LP (expressions_list | logics ) RP DO instructions (FINALLY instructions)?;
 
