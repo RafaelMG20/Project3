@@ -45,6 +45,7 @@ expr: ID '(' exprList? ')'      # Call
 
 
 exprList : expr (',' expr)*;
+rafa: expr;
 
 // exemplo de não fatoração À esquerda
 
