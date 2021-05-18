@@ -29,24 +29,32 @@ public class TypeChecker extends algBaseListener {
     {
         if(this.globalScope != this.currentScope)
         {
+            Symbol temp = this.globalScope.resolve(s.name);
             if(!this.globalScope.define(s))
             {
+
                 System.err.println("Redefining previously defined variable " + s.name + " in line " + ctx.start.getLine());
                 ++this.semanticErrors;
                 return false;
             }
             if(this.globalScope.containsName(s.name))
             {
-                Symbol temp = this.globalScope.resolve(s.name);
                 if(temp !=null)
                 {
+                    if(temp instanceof FunctionSymbol)
+                    {
+                        System.err.println("A variavel " + s.name + " na linha " + ctx.start.getLine() + " é uma função");
+                        ++this.semanticErrors;
+                        return false;
+                    }
                     if(!temp.type.equals(s.type))
                     {
                         System.err.println("A variavel " + s.name + " na linha " + ctx.start.getLine() + " é do tipo " + temp.type);
+                        ++this.semanticErrors;
+                        return false;
                     }
                 }
-                ++this.semanticErrors;
-                return false;
+
             }
 
         }
@@ -64,10 +72,20 @@ public class TypeChecker extends algBaseListener {
             }
         }
         if (!this.currentScope.define(s)) {
-            String var10001 = s.name;
+            Symbol temp = this.currentScope.resolve(s.name);
+            if(temp instanceof FunctionSymbol)
+            {
+                System.err.println("A variavel " + s.name + " na linha " + ctx.start.getLine() + " é uma função");
+                ++this.semanticErrors;
+                return false;
+            }
+
+            else{
+                String var10001 = s.name;
             System.err.println("Redefining previously defined variable " + var10001 + " in line " + ctx.start.getLine());
             ++this.semanticErrors;
             return false;
+            }
         } else {
             //this.exprType.put(ctx, s.type);
             return true;
@@ -163,7 +181,8 @@ public class TypeChecker extends algBaseListener {
                     System.err.println("A variavel " + name + " na linha " + ctx.start.getLine() + " deve ser do tipo Bool");
                     ++this.semanticErrors;
                     exprType.put(ctx, Symbol.PType.ERROR);
-                } else
+                }
+                else
                     exprType.put(ctx, s.type);
                 }
 
@@ -172,7 +191,12 @@ public class TypeChecker extends algBaseListener {
                     if(s.type.equals(Symbol.PType.PINT) || s.type.equals(Symbol.PType.PSTRING) || s.type.equals(Symbol.PType.PFLOAT))
                     {
                         System.err.println("A variavel " + name + " na linha " + ctx.start.getLine() + " é do tipo " + s.type);
+                        exprType.put(ctx, Symbol.PType.ERROR);
+                        ++this.semanticErrors;
                     }
+
+                    else
+                        exprType.put(ctx, s.type);
                 }
             }
 
