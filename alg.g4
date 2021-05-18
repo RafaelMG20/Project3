@@ -41,6 +41,7 @@ expr: ID '(' exprList? ')'      # Call
     | LITERAL_INTEIRO           # Int
     | LITERAL_DECIMAL           # Float
     | ide                       # Identifier
+    | idy                       # IdBoolPoint
 
     ;
 
@@ -85,7 +86,9 @@ op_paranteses : LP (expr*) RP;
 op_pointer : INDEX_POINT_L (expr*) INDEX_POINT_R;
 //ide : (SOMA_SUB|IDEY) (IDENT|((IDENT|LITERAL_INTEIRO) op_pointer) | LITERAL_INTEIRO);
 // ide foi alterado
-ide : (SOMA_SUB|IDEY) expr?;
+ide : SOMA_SUB expr?;
+
+idy : IDEY IDENT;
 
 comparations : (expr|op_paranteses|op_pointer|ide) (MENORQ | MAIORQ | EQUAL_DIF | COMPARATOR) (IDENT|expr|op_paranteses|op_pointer|ide|booV) ;
 booV : TRUE | FALSE;

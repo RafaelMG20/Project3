@@ -51,6 +51,13 @@ public interface algVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIdentifier(alg.IdentifierContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code IdBoolPoint}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdBoolPoint(alg.IdBoolPointContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code MulDiv}
 	 * labeled alternative in {@link alg#expr}.
 	 * @param ctx the parse tree
@@ -201,6 +208,12 @@ public interface algVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitIde(alg.IdeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link alg#idy}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdy(alg.IdyContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link alg#comparations}.
 	 * @param ctx the parse tree

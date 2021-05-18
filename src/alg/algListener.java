@@ -76,6 +76,18 @@ public interface algListener extends ParseTreeListener {
 	 */
 	void exitIdentifier(alg.IdentifierContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code IdBoolPoint}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdBoolPoint(alg.IdBoolPointContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code IdBoolPoint}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdBoolPoint(alg.IdBoolPointContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code MulDiv}
 	 * labeled alternative in {@link alg#expr}.
 	 * @param ctx the parse tree
@@ -329,6 +341,16 @@ public interface algListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitIde(alg.IdeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link alg#idy}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdy(alg.IdyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link alg#idy}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdy(alg.IdyContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link alg#comparations}.
 	 * @param ctx the parse tree

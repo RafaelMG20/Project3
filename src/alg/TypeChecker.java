@@ -107,7 +107,11 @@ public class TypeChecker extends algBaseListener {
     }
 
     public void enterVar(alg.VarContext ctx) { }
-    public void exitVar(alg.VarContext ctx) { }
+
+    public void exitVar(alg.VarContext ctx)
+    {
+
+    }
     public void enterFuncInv(alg.FuncInvContext ctx) { }
     public void exitFuncInv(alg.FuncInvContext ctx) { }
     public void enterPointer(alg.PointerContext ctx) { }
@@ -136,8 +140,31 @@ public class TypeChecker extends algBaseListener {
 
     public void exitIdentifier(alg.IdentifierContext ctx)
     {
+
         Symbol.PType e1 = (Symbol.PType)this.exprType.get(ctx.ide().getChild(1));
         exprType.put(ctx, e1);
+    }
+
+    public void enterIdBoolPoint(alg.IdBoolPointContext ctx) { }
+
+    public void exitIdBoolPoint(alg.IdBoolPointContext ctx)
+    {
+        String name = ctx.idy().IDENT().getText();
+        Symbol s = this.currentScope.resolve(name);
+        if(s==null)
+        {
+            System.err.println("A variavel " + name + " na linha " + ctx.start.getLine() + " não está definida");
+            ++this.semanticErrors;
+            return;
+        }
+
+        else
+        {
+            if(s.type.equals(Symbol.PType.BOOL))
+            {
+                System.err.println("A variavel " + name + " na linha " + ctx.start.getLine() + " deve ser do tipo Bool");
+            }
+        }
     }
 
     public void enterEquals(alg.EqualsContext ctx) { }
@@ -351,6 +378,7 @@ public class TypeChecker extends algBaseListener {
             if(ctx.inteiro().INT()!=null)
             {
                 defineSymbol(ctx,new Symbol(ctx.getChild(0).getChild(0).getText(),ctx.getChild(0).getChild(1).getText()));
+                exprType.put(ctx, Symbol.PType.INT);
             }
 
             else
