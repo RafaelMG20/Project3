@@ -8,7 +8,7 @@ int f(int x, float y, bool b)
     <float> a = null ;
     int x;
     int r;
-    int ab = x +  2;
+    int ab = ?x +  2;
 
     return x;
 }
