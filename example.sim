@@ -1,0 +1,16 @@
+int x;
+int y;
+
+
+int f(int x, float y, bool b)
+ {
+   float rafa;
+    <float> a ;
+    int x;
+    x = 2 * 2.2;
+
+    return x;
+}
+
+
+

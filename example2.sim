@@ -1,0 +1,26 @@
+int x;
+
+
+int f(int x, float y, int x) {
+    float z;
+    z = true;
+    float x;
+    g();
+    i = 3;
+    k = 6;
+    g = 4;
+    int k;
+    4 * empty();
+    return x + y;
+}
+
+void g() {
+    int x = 0;
+    float y;
+    y = 9;
+    y = 3 * y;
+    f();
+    z();
+    y();
+    x = f;
+}
