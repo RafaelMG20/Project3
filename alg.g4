@@ -42,6 +42,7 @@ expr: ID '(' exprList? ')'      # Call
     | LITERAL_DECIMAL           # Float
     | ide                       # Identifier
     | idy                       # IdBoolPoint
+    | expr '[' expr ']'         # PointIndex    // PointIndex foi adicionado para a Indexação de ponteiro
 
     ;
 
@@ -90,8 +91,8 @@ ide : SOMA_SUB expr?;
 
 idy : IDEY IDENT;
 
-comparations : (expr|op_paranteses|op_pointer|ide) (MENORQ | MAIORQ | EQUAL_DIF | COMPARATOR) (IDENT|expr|op_paranteses|op_pointer|ide|booV) ;
-booV : TRUE | FALSE;
+
+comparations : expr (MENORQ | MAIORQ | EQUAL_DIF | COMPARATOR) expr;
 
 logics : LP (expr*) (E_LOGICO|OU_LOGICO) (expr*) RP EQUAL_DIF ('true'|'false') ;
 

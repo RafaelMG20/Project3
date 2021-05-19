@@ -15,6 +15,7 @@ public class Symbol {
         PINT,
         PFLOAT,
         PSTRING,
+        PNULL,
         ERROR
 
     }

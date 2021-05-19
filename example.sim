@@ -2,15 +2,16 @@ int x;
 int y;
 
 
-int f(int x, float y, bool b)
+int f(int x1, float z, <string> x3 )
  {
-   //float rafa = null;
-    <float> a = null ;
-    int x;
-    int r;
-    int ab = ?a +  2;
-    //int f;
-
+    <string> ra = 'ola';
+    <int> test = null;
+    <float> ba = 2;
+    f(x1,z,test);
+    ra[ba];
+    ra[x];
+    test[x];
+    ba[x];
     return x;
 }
 

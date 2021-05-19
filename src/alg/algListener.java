@@ -40,18 +40,6 @@ public interface algListener extends ParseTreeListener {
 	 */
 	void exitCall(alg.CallContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code Float}
-	 * labeled alternative in {@link alg#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterFloat(alg.FloatContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code Float}
-	 * labeled alternative in {@link alg#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitFloat(alg.FloatContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code Parenteses}
 	 * labeled alternative in {@link alg#expr}.
 	 * @param ctx the parse tree
@@ -63,18 +51,6 @@ public interface algListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParenteses(alg.ParentesesContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code Identifier}
-	 * labeled alternative in {@link alg#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterIdentifier(alg.IdentifierContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code Identifier}
-	 * labeled alternative in {@link alg#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitIdentifier(alg.IdentifierContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code IdBoolPoint}
 	 * labeled alternative in {@link alg#expr}.
@@ -124,18 +100,6 @@ public interface algListener extends ParseTreeListener {
 	 */
 	void exitVar(alg.VarContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code FuncInv}
-	 * labeled alternative in {@link alg#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterFuncInv(alg.FuncInvContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code FuncInv}
-	 * labeled alternative in {@link alg#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitFuncInv(alg.FuncInvContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code Pointer}
 	 * labeled alternative in {@link alg#expr}.
 	 * @param ctx the parse tree
@@ -159,6 +123,54 @@ public interface algListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitInt(alg.IntContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code PointIndex}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterPointIndex(alg.PointIndexContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code PointIndex}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitPointIndex(alg.PointIndexContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Float}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterFloat(alg.FloatContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Float}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitFloat(alg.FloatContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Identifier}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifier(alg.IdentifierContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Identifier}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifier(alg.IdentifierContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code FuncInv}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterFuncInv(alg.FuncInvContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code FuncInv}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitFuncInv(alg.FuncInvContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code Paren}
 	 * labeled alternative in {@link alg#expr}.
@@ -361,16 +373,6 @@ public interface algListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitComparations(alg.ComparationsContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link alg#booV}.
-	 * @param ctx the parse tree
-	 */
-	void enterBooV(alg.BooVContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link alg#booV}.
-	 * @param ctx the parse tree
-	 */
-	void exitBooV(alg.BooVContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link alg#logics}.
 	 * @param ctx the parse tree

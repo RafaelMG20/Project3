@@ -129,10 +129,22 @@ public class TypeChecker extends algBaseListener {
     public void exitVar(alg.VarContext ctx)
     {
         Symbol s = this.currentScope.resolve(ctx.IDENT().getText());
-        this.exprType.put(ctx,s.type);
+        if(s!=null)
+            this.exprType.put(ctx,s.type);
+        else
+        {
+            this.exprType.put(ctx, Symbol.PType.ERROR);
+            System.err.println("A variável " + ctx.IDENT().getText() + " na linha " + ctx.start.getLine() + " não está definida");
+            ++this.semanticErrors;
+        }
     }
     public void enterFuncInv(alg.FuncInvContext ctx) { }
-    public void exitFuncInv(alg.FuncInvContext ctx) { }
+
+    public void exitFuncInv(alg.FuncInvContext ctx)
+    {
+
+    }
+
     public void enterPointer(alg.PointerContext ctx) { }
 
     public void exitPointer(alg.PointerContext ctx)
@@ -162,6 +174,18 @@ public class TypeChecker extends algBaseListener {
 
         Symbol.PType e1 = (Symbol.PType)this.exprType.get(ctx.ide().getChild(1));
         exprType.put(ctx, e1);
+    }
+
+    public void enterPointIndex(alg.PointIndexContext ctx) { }
+
+    public void exitPointIndex(alg.PointIndexContext ctx)
+    {
+        Symbol.PType e1 = (Symbol.PType)this.exprType.get(ctx.expr(0));
+        Symbol.PType e2 = (Symbol.PType)this.exprType.get(ctx.expr(1));
+        String operator1 = ((ParseTree)ctx.INDEX_POINT_L()).getText();
+        String operator2 = ((ParseTree)ctx.INDEX_POINT_R()).getText();
+        this.verifyIndexPointer(ctx, operator1, operator2, e1, e2);
+
     }
 
     public void enterIdBoolPoint(alg.IdBoolPointContext ctx) { }
@@ -282,7 +306,30 @@ public class TypeChecker extends algBaseListener {
     public void enterIde(alg.IdeContext ctx) { }
     public void exitIde(alg.IdeContext ctx) { }
     public void enterComparations(alg.ComparationsContext ctx) { }
-    public void exitComparations(alg.ComparationsContext ctx) { }
+
+    public void exitComparations(alg.ComparationsContext ctx)
+    {
+        String s = ctx.getChild(1).getText();
+        if(s.equals("<") || s.equals(">") || s.equals(">=") || s.equals("<="))
+        {
+
+            Symbol.PType e1 = (Symbol.PType)this.exprType.get(ctx.expr(0));
+            Symbol.PType e2 = (Symbol.PType)this.exprType.get(ctx.expr(1));
+            String operator = ((ParseTree)ctx.children.get(1)).getText();
+
+            this.verifyComparator(ctx, operator, e1, e2);
+        }
+
+        else if(s.equals("==") || s.equals("!="))
+        {
+            Symbol.PType e1 = (Symbol.PType)this.exprType.get(ctx.expr(0));
+            Symbol.PType e2 = (Symbol.PType)this.exprType.get(ctx.expr(1));
+            String operator = ((ParseTree)ctx.children.get(1)).getText();
+
+            this.verifyEqualDif(ctx, operator, e1, e2);
+        }
+    }
+
     public void enterLogics(alg.LogicsContext ctx) { }
     public void exitLogics(alg.LogicsContext ctx) { }
     public void enterExpressions_list(alg.Expressions_listContext ctx) { }
@@ -299,13 +346,36 @@ public class TypeChecker extends algBaseListener {
     public void enterArg(alg.ArgContext ctx) { }
 
     public void exitArg(alg.ArgContext ctx) {
-        String type = ctx.type().getChild(0).getText();
-        String name = ctx.IDENT().getText();
-
-        Symbol parameter = new Symbol(type,name);
-        if(defineSymbol(ctx,parameter) && this.currentFunction != null)
+        if(ctx.type().MENORQ() != null)
         {
-            this.currentFunction.arguments.add(parameter);
+            String a = "";
+            if(ctx.type().INT() != null)
+            {
+                    a = "pint";
+            }
+
+            else if(ctx.type().FLOAT() != null) {
+                    a = "pfloat";
+            }
+            else if(ctx.type().STRING()!=null) {
+                    a = "pstring";
+            }
+
+            String name = ctx.IDENT().getText();
+
+            Symbol parameter = new Symbol(a, name);
+            if (defineSymbol(ctx, parameter) && this.currentFunction != null) {
+                this.currentFunction.arguments.add(parameter);
+            }
+        }
+        else {
+            String type = ctx.type().getChild(0).getText();
+            String name = ctx.IDENT().getText();
+
+            Symbol parameter = new Symbol(type, name);
+            if (defineSymbol(ctx, parameter) && this.currentFunction != null) {
+                this.currentFunction.arguments.add(parameter);
+            }
         }
     }
 
@@ -341,13 +411,83 @@ public class TypeChecker extends algBaseListener {
 
     public void exitFunction_invocate(alg.Function_invocateContext ctx)
     {
-        String functionName = ctx.IDENT().getText();
-
-        Symbol s = this.currentScope.resolve(functionName);
-
-        if(s==null)
+        //FALTA ADICIONAR QUANDO SE PODE METER REAL COMO INTEIRO, OU NULL COMO PONTEIRO)
+        String name = ctx.IDENT().getText();
+        Symbol s = this.currentScope.resolve(name);
+        int countArgs = 0;
+        for(int i = 0; i<ctx.getChildCount(); i++)
         {
-            System.err.println("Undefined function " + functionName + " in line " + ctx.IDENT().getSymbol().getLine() + " position " + ctx.IDENT().getSymbol().getCharPositionInLine());
+            if(ctx.getChild(i).getText().equals(","))
+                countArgs++;
+        }
+
+        if(countArgs > 0)
+            countArgs+=1;
+
+        if(s instanceof FunctionSymbol)
+        {
+            int args = ((FunctionSymbol) s).arguments.size();
+            if(args < countArgs)
+            {
+                System.err.println("A chamada à função " + name + " na linha" + ctx.start.getLine() + " tem poucos argumentos. Faltam " + (countArgs-args));
+                ++this.semanticErrors;
+                return;
+            }
+            else if(args > countArgs)
+            {
+                System.err.println("A chamada à função " + name + " na linha" + ctx.start.getLine() + " tem demasiados argumentos. Retire " + (-(countArgs-args)));
+                ++this.semanticErrors;
+                return;
+            }
+
+
+            else
+            {
+                int temporary = this.semanticErrors;
+                int z = 0;
+                for (int i = 2; i<ctx.getChildCount()-1; i+=2)
+                {
+                    String temp = ctx.getChild(i).getChild(0).getText();
+                    Symbol name2 = this.currentScope.resolve(temp);
+                    if(name2 != null)
+                    {
+                        if(name2.type.equals(Symbol.PType.INT)||name2.type.equals(Symbol.PType.FLOAT))
+                        {
+                            if(!((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.INT) && !((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.FLOAT) )
+                            {
+
+                                System.err.println("A variavel " + name2.name + " na linha " + ctx.start.getLine() + " deve ser do tipo " + ((FunctionSymbol) s).arguments.get(z).type );
+                                ++this.semanticErrors;
+                            }
+                        }
+
+                        else if(name2.type.equals(Symbol.PType.PNULL))
+                        {
+                            System.out.println("pnull " + ((FunctionSymbol) s).arguments.get(z).type);
+                            if(!((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.PSTRING) && !((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.PFLOAT) && !((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.PINT) )
+                            {
+
+                                System.err.println("A variavel " + name2.name + " na linha " + ctx.start.getLine() + " deve ser do tipo " + ((FunctionSymbol) s).arguments.get(z).type );
+                                ++this.semanticErrors;
+                            }
+                        }
+                        else if(!name2.type.equals(((FunctionSymbol) s).arguments.get(z).type))
+                        {
+
+                            System.err.println("A variavel " + name2.name + " na linha " + ctx.start.getLine() + " deve ser do tipo " + ((FunctionSymbol) s).arguments.get(z).type );
+                            ++this.semanticErrors;
+                        }
+                    }
+                    z++;
+                }
+               if(temporary == this.semanticErrors)
+                   this.exprType.put(ctx,s.type);
+            }
+
+        }
+        else if(s==null)
+        {
+            System.err.println("Undefined function " + name + " in line " + ctx.IDENT().getSymbol().getLine() + " position " + ctx.IDENT().getSymbol().getCharPositionInLine());
             ++this.semanticErrors;
             //exprType.put(ctx,Symbol.PType.ERROR);
             this.exprType.put(ctx, Symbol.PType.ERROR);
@@ -355,12 +495,9 @@ public class TypeChecker extends algBaseListener {
 
         else if(!(s instanceof FunctionSymbol))
         {
-            System.err.println("Using variable " + functionName + " as function in line " + ctx.IDENT().getSymbol().getLine());
+            System.err.println("Using variable " + name + " as function in line " + ctx.IDENT().getSymbol().getLine());
             ++this.semanticErrors;
             this.exprType.put(ctx, Symbol.PType.ERROR);
-        }
-        else{
-            exprType.put(ctx,s.type);
         }
 
 
@@ -398,7 +535,26 @@ public class TypeChecker extends algBaseListener {
         }
     }
     public void enterIf_cond(alg.If_condContext ctx) { }
-    public void exitIf_cond(alg.If_condContext ctx) { }
+
+    public void exitIf_cond(alg.If_condContext ctx)
+    {
+        int count = ctx.getChildCount();
+        if(ctx.ELSE() != null)
+            count -=6;
+        else
+            count-=4;
+        if(ctx.E_LOGICO()!=null||ctx.OU_LOGICO()!=null) {
+            for (int i = 3; i < count; i += 2) {
+                Symbol.PType e1 = (Symbol.PType) this.exprType.get(ctx.getChild(i - 1));
+                Symbol.PType e2 = (Symbol.PType) this.exprType.get(ctx.getChild(i + 1));
+                String operator = ((ParseTree) ctx.children.get(i)).getText();
+                //System.out.println(operator);
+
+                this.verifyLogicals(ctx, operator, e1, e2);
+            }
+        }
+    }
+
     public void enterLoop(alg.LoopContext ctx) { }
     public void exitLoop(alg.LoopContext ctx) { }
     public void enterSub_block(alg.Sub_blockContext ctx) { }
@@ -409,6 +565,23 @@ public class TypeChecker extends algBaseListener {
     {
         if(ctx.inteiro() != null)
         {
+            if(ctx.inteiro().INDEX_POINT_L() != null)
+            {
+                Symbol s1 = this.currentScope.resolve(ctx.inteiro().getChild(0).getText());
+                Symbol s2 = this.currentScope.resolve(ctx.inteiro().getChild(2).getText());
+                Symbol.PType e1 = s1.type;
+                Symbol.PType e2;
+                if(s2 != null)
+                {
+                    e2 = s2.type;
+                }
+                else
+                    e2 = (Symbol.PType)this.exprType.get(ctx.inteiro().getChild(2));
+                String operator1 = ((ParseTree)ctx.inteiro().INDEX_POINT_L()).getText();
+                String operator2 = ((ParseTree)ctx.inteiro().INDEX_POINT_R()).getText();
+                this.verifyIndexPointer(ctx, operator1, operator2, e1, e2);
+                return;
+            }
             String id = ctx.inteiro().IDENT().get(0).getText();
             if(ctx.inteiro().INT()!=null)
             {
@@ -422,7 +595,7 @@ public class TypeChecker extends algBaseListener {
                 if(s!=null)
                     if(!s.type.equals(Symbol.PType.INT))
                     {
-                        System.err.println("A variavel " + id + " na linha " + ctx.start.getLine() + " é do tipo " + s.type);
+                        System.err.println("A variável " + id + " na linha " + ctx.start.getLine() + " é do tipo " + s.type);
                         ++this.semanticErrors;
                         return;
                     }
@@ -471,11 +644,26 @@ public class TypeChecker extends algBaseListener {
         {
             String a = "";
             if(ctx.ponteiro_inteiro() != null)
-                a = "pint";
-            else if(ctx.ponteiro_real() != null)
-                a = "pfloat";
-            else
-                a = "pstring";
+            {
+                if(ctx.ponteiro_inteiro().NULL() != null || ctx.ponteiro_inteiro().getChildCount() == 4)
+                    a ="pnull";
+
+                else
+                    a = "pint";
+            }
+
+            else if(ctx.ponteiro_real() != null) {
+                if(ctx.ponteiro_real().NULL() != null || ctx.ponteiro_real().getChildCount() == 4)
+                    a ="pnull";
+                else
+                    a = "pfloat";
+            }
+            else if(ctx.ponteiro_cadeia()!=null) {
+                if(ctx.ponteiro_cadeia().NULL() != null || ctx.ponteiro_cadeia().getChildCount() == 4)
+                    a ="pnull";
+                else
+                    a = "pstring";
+            }
 
             defineSymbol(ctx,new Symbol(a,ctx.getChild(0).getChild(3).getText()));
         }
@@ -608,6 +796,101 @@ public class TypeChecker extends algBaseListener {
                 PrintStream var10000 = System.err;
                 String var10001 = e1.toString();
                 var10000.println("Invalid types for binary operator " + var10001 + " " + operator + " " + e2.toString() + " in line " + ctx.start.getLine());
+                ++this.semanticErrors;
+                this.exprType.put(ctx, Symbol.PType.ERROR);
+                return false;
+            }
+        } else {
+            this.exprType.put(ctx, Symbol.PType.ERROR);
+            return false;
+        }
+    }
+
+    private boolean verifyEqualDif(ParserRuleContext ctx, String operator, Symbol.PType e1, Symbol.PType e2) {
+        if (e1 != Symbol.PType.ERROR && e2 != Symbol.PType.ERROR) {
+            if (e1 == e2  ) {
+                this.exprType.put(ctx, Symbol.PType.BOOL);
+                return true;
+            }  else if((e1 == Symbol.PType.PNULL && e2== Symbol.PType.PFLOAT) || (e1 == Symbol.PType.PNULL && e2== Symbol.PType.PINT) || (e1 == Symbol.PType.PNULL && e2== Symbol.PType.PSTRING) || (e1 == Symbol.PType.PFLOAT && e2==  Symbol.PType.PNULL) || (e1 == Symbol.PType.PINT && e2==  Symbol.PType.PNULL) || (e1 == Symbol.PType.PSTRING && e2==  Symbol.PType.PNULL) )
+            {
+                this.exprType.put(ctx, Symbol.PType.BOOL);
+                return true;
+            }
+            else {
+                PrintStream var10000 = System.err;
+                String var10001 = e1.toString();
+                var10000.println("Invalid types for equal/dif comparator " + var10001 + " " + operator + " " + e2.toString() + " in line " + ctx.start.getLine());
+                ++this.semanticErrors;
+                this.exprType.put(ctx, Symbol.PType.ERROR);
+                return false;
+            }
+        } else {
+            this.exprType.put(ctx, Symbol.PType.ERROR);
+            return false;
+        }
+    }
+
+    private boolean verifyComparator(ParserRuleContext ctx, String operator, Symbol.PType e1, Symbol.PType e2) {
+        if (e1 != Symbol.PType.ERROR && e2 != Symbol.PType.ERROR) {
+            if (e1 == Symbol.PType.INT && e2 == Symbol.PType.INT) {
+                this.exprType.put(ctx, Symbol.PType.BOOL);
+                return true;
+            } else if (e1 == Symbol.PType.FLOAT && this.isConvertibleTo(e2, e1)) {
+                this.exprType.put(ctx, Symbol.PType.BOOL);
+                return true;
+            } else if (e2 == Symbol.PType.FLOAT && this.isConvertibleTo(e1, e2)) {
+                this.exprType.put(ctx, Symbol.PType.BOOL);
+                return true;
+            } else {
+                PrintStream var10000 = System.err;
+                String var10001 = e1.toString();
+                var10000.println("Invalid types for comparator " + var10001 + " " + operator + " " + e2.toString() + " in line " + ctx.start.getLine());
+                ++this.semanticErrors;
+                this.exprType.put(ctx, Symbol.PType.ERROR);
+                return false;
+            }
+        } else {
+            this.exprType.put(ctx, Symbol.PType.ERROR);
+            return false;
+        }
+    }
+
+    private boolean verifyLogicals(ParserRuleContext ctx, String operator, Symbol.PType e1, Symbol.PType e2) {
+        if (e1 != Symbol.PType.ERROR && e2 != Symbol.PType.ERROR) {
+            if (e1 == Symbol.PType.BOOL && e2 == Symbol.PType.BOOL) {
+                this.exprType.put(ctx, Symbol.PType.BOOL);
+                return true;
+            }
+            else {
+                PrintStream var10000 = System.err;
+                String var10001 = e1.toString();
+                var10000.println("Invalid types for logics operator " + var10001 + " " + operator + " " + e2.toString() + " in line " + ctx.start.getLine());
+                ++this.semanticErrors;
+                this.exprType.put(ctx, Symbol.PType.ERROR);
+                return false;
+            }
+        } else {
+            this.exprType.put(ctx, Symbol.PType.ERROR);
+            return false;
+        }
+    }
+
+    private boolean verifyIndexPointer(ParserRuleContext ctx, String operator1, String operator2, Symbol.PType e1, Symbol.PType e2) {
+        if (e1 != Symbol.PType.ERROR && e2 != Symbol.PType.ERROR) {
+            if (e1 == Symbol.PType.PINT && e2 == Symbol.PType.INT) {
+                this.exprType.put(ctx, Symbol.PType.INT);
+                return true;
+            } else if (e1 == Symbol.PType.PFLOAT && e2 == Symbol.PType.INT) {
+                this.exprType.put(ctx, Symbol.PType.FLOAT);
+                return true;
+            } else if (e1 == Symbol.PType.PSTRING && e2 == Symbol.PType.INT) {
+                this.exprType.put(ctx, Symbol.PType.STRING);
+                return true;
+            }
+            else {
+                PrintStream var10000 = System.err;
+                String var10001 = e1.toString();
+                var10000.println("Invalid types for POINTER " + var10001 + " " + operator1 + " " + e2.toString() + " " + operator2 + " in line " + ctx.start.getLine());
                 ++this.semanticErrors;
                 this.exprType.put(ctx, Symbol.PType.ERROR);
                 return false;

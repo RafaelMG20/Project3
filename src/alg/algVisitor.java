@@ -30,26 +30,12 @@ public interface algVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCall(alg.CallContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code Float}
-	 * labeled alternative in {@link alg#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFloat(alg.FloatContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code Parenteses}
 	 * labeled alternative in {@link alg#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitParenteses(alg.ParentesesContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code Identifier}
-	 * labeled alternative in {@link alg#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIdentifier(alg.IdentifierContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code IdBoolPoint}
 	 * labeled alternative in {@link alg#expr}.
@@ -79,13 +65,6 @@ public interface algVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVar(alg.VarContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code FuncInv}
-	 * labeled alternative in {@link alg#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFuncInv(alg.FuncInvContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code Pointer}
 	 * labeled alternative in {@link alg#expr}.
 	 * @param ctx the parse tree
@@ -99,6 +78,34 @@ public interface algVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitInt(alg.IntContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code PointIndex}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPointIndex(alg.PointIndexContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Float}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFloat(alg.FloatContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Identifier}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifier(alg.IdentifierContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code FuncInv}
+	 * labeled alternative in {@link alg#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFuncInv(alg.FuncInvContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code Paren}
 	 * labeled alternative in {@link alg#expr}.
@@ -220,12 +227,6 @@ public interface algVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitComparations(alg.ComparationsContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link alg#booV}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBooV(alg.BooVContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link alg#logics}.
 	 * @param ctx the parse tree
