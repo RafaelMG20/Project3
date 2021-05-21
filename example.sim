@@ -1,19 +1,22 @@
 int x;
-int y;
+//int y;
 
-
-int f(int x1, float z, <string> x3 )
- {
-    <string> ra = 'ola';
-    <int> test = null;
-    <float> ba = 2;
-    f(x1,z,test);
-    ra[ba];
-    ra[x];
-    test[x];
-    ba[x];
-    return x;
+<string> test()
+{
+return 0;
 }
 
+
+int f(int x2)
+ {
+    int c1 = test()
+    float c2 = test();
+    bool a = test();
+    string ac = test();
+    <int> oi = test();
+    <string> oi1 = test();
+    <float> oi2 = test();
+    return x;
+}
 
 

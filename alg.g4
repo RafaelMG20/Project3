@@ -59,7 +59,7 @@ inteiro:(INT? IDENT ('[' (IDENT|LITERAL_INTEIRO) ']')? equals);
 
 //------------------
 inteiros : INT IDENT (',' IDENT)*;
-booleano : BOOL? IDENT (EQUAL ('true'|'false'))?;
+booleano : BOOL? IDENT (EQUAL ('true'|'false'|function_invocate))?;
 booleanos : BOOL IDENT (',' IDENT)*;
 
 // exemplo de não fatoração À esquerda
@@ -72,14 +72,14 @@ reais : FLOAT IDENT (',' IDENT)*;
 //exemplo de não fatorização à esquerda
 //cadeia_caracteres : STRING? IDENT (INDEX_POINT_L(IDENT|LITERAL_INTEIRO) INDEX_POINT_R)? (EQUAL (CADEIA_CARACTERES));
 //resolução
-equals_string:EQUAL CADEIA_CARACTERES | ;
+equals_string:EQUAL CADEIA_CARACTERES | EQUAL function_invocate | ;
 cadeia_caracteres: STRING? IDENT (INDEX_POINT_L(IDENT|LITERAL_INTEIRO) INDEX_POINT_R)? equals_string;
 //---------------
 
 cadeias_caracteres : STRING IDENT (',' IDENT)*;
 ponteiro_inteiro : MENORQ INT MAIORQ IDENT (EQUAL (expr* |NULL | ('[' expr* ']')))?;
 ponteiro_real : MENORQ FLOAT MAIORQ IDENT (EQUAL (expr* |NULL | ('[' expr* ']')))?;
-ponteiro_cadeia : MENORQ STRING MAIORQ IDENT (EQUAL (CADEIA_CARACTERES|NULL | ('[' expr* ']')) );
+ponteiro_cadeia : MENORQ STRING MAIORQ IDENT (EQUAL (CADEIA_CARACTERES|function_invocate|NULL | ('[' expr* ']')) );
 
 //expression: (function_invocate | LITERAL_INTEIRO | LITERAL_DECIMAL | LITERAL_EXPONENCIAL | CADEIA_CARACTERES | IDENT) PONTO_VIRGULA ;
 //expressions: (expr|op_paranteses|op_pointer|ide)((MULT_DIV | SOMA_SUB) (expr|op_paranteses|op_pointer|ide))* PONTO_VIRGULA;
