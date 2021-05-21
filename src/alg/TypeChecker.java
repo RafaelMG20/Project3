@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.io.PrintStream;
+import java.util.Locale;
 
 public class TypeChecker extends algBaseListener {
 
@@ -686,16 +687,50 @@ public class TypeChecker extends algBaseListener {
     {
     }
     public void enterBody(alg.BodyContext ctx) { }
-    public void exitBody(alg.BodyContext ctx) { }
+    public void exitBody(alg.BodyContext ctx) {
+        int count = ctx.instructions().size();
+        for(int i = 0; i<count; i++){
+            if(ctx.instructions(i).ctrl_instruct() != null && ctx.instructions(count-1).ctrl_instruct() != null) {
+                if ((ctx.instructions(count-1).ctrl_instruct().RETURN() != null) &&(ctx.instructions(i).ctrl_instruct().RETURN() != null && i != count - 1))
+                    System.err.println("Só pode ser invocado um return na função, existe outro na linha " + ctx.instructions(i).start.getLine());
+            }
+        }
+    }
+
     public void enterPrologo(alg.PrologoContext ctx) { }
     public void exitPrologo(alg.PrologoContext ctx) { }
     public void enterEpilogo(alg.EpilogoContext ctx) { }
     public void exitEpilogo(alg.EpilogoContext ctx) { }
-
-    public void enterFunction(alg.FunctionContext ctx) {
-    }
+    public void enterFunction(alg.FunctionContext ctx) { }
 
     public void exitFunction(alg.FunctionContext ctx) {
+        String type_function = ctx.function_declare().type().getText().toUpperCase(Locale.ROOT);
+        int count = ctx.body().instructions().size();
+        if(ctx.body().instructions(count-1).ctrl_instruct() != null && ctx.body().instructions(count-1).ctrl_instruct().RETURN() != null){
+            boolean return_has_value = ctx.body().instructions(count-1).ctrl_instruct().expressions_list2() != null;
+            if(return_has_value){
+                if(type_function.equals("VOID")) {
+                    System.err.println("Função é do tipo " + type_function + " return não pode retornar valor");
+                    ++this.semanticErrors;
+                }else{
+                    Symbol.PType value_type = (Symbol.PType)this.exprType.get(ctx.body().instructions(count-1).ctrl_instruct().expressions_list2().expr());
+                    if(!type_function.equals(value_type.toString())){
+                        System.err.println("A função é do tipo " + type_function + " e o valor retornado é do tipo " + value_type.toString());
+                        ++this.semanticErrors;
+                    }
+                }
+            }else{
+                if(!type_function.equals("VOID")){
+                    System.err.println("Return deve retornar valor");
+                    ++this.semanticErrors;
+                }
+            }
+        }else{
+            if(!type_function.equals("VOID")) {
+                System.err.println("Função é do tipo "+ type_function + " logo deve ter return no fim");
+                ++this.semanticErrors;
+            }
+        }
         this.currentFunction = null;
         this.currentScope = this.currentScope.getParentScope();
     }

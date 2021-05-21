@@ -12,6 +12,7 @@ int f(int x2)
     int c1 = test()
     float c2 = test();
     bool a = test();
+    return 0;
     string ac = test();
     <int> oi = test();
     <string> oi1 = test();
