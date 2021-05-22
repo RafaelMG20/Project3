@@ -54,7 +54,7 @@ exprList : expr (',' expr)*;
 //inteiro : (INT IDENT ('[' (IDENT|LITERAL_INTEIRO) ']')? (EQUAL (expr)*)?);
 
 // resolução
-equals : (EQUAL expr+) | ;
+equals : (EQUAL (function_invocate|expr+)) | ;
 inteiro:(INT? IDENT ('[' (IDENT|LITERAL_INTEIRO) ']')? equals);
 
 //------------------

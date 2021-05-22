@@ -318,27 +318,28 @@ public class TypeChecker extends algBaseListener {
 
     public void exitInteiro(alg.InteiroContext ctx)
     {
-        if(ctx.equals().getChildCount() == 2)
-        {
+        if(ctx.equals().getChildCount() == 2 && ctx.equals().function_invocate()!=null) {
             String variableName = ctx.IDENT().get(0).getText();
-            String name = ctx.equals().expr().get(0).getChild(0).getChild(0).getText();
-            Symbol s = this.currentScope.resolve(name);
-            if(s != null) {
-                if (s.type.equals(Symbol.PType.VOID)) {
-                    System.err.println("A função " + name + " na linha " + ctx.start.getLine() + " é do tipo VOID e não retorna nenhum valor");
-                    ++this.semanticErrors;
-                    return;
-                }
+            Symbol oi = this.currentScope.resolve(variableName);
+            if (oi != null) {
+                String name = ctx.equals().expr().get(0).getChild(0).getChild(0).getText();
+                Symbol s = this.currentScope.resolve(name);
+                if (s != null) {
+                    if (s.type.equals(Symbol.PType.VOID)) {
+                        System.err.println("A função " + name + " na linha " + ctx.start.getLine() + " é do tipo VOID e não retorna nenhum valor");
+                        ++this.semanticErrors;
+                        return;
+                    }
 
-                if(s.type.equals(Symbol.PType.FLOAT) || s.type.equals(Symbol.PType.BOOL) || s.type.equals(Symbol.PType.STRING) || s.type.equals(Symbol.PType.PFLOAT) || s.type.equals(Symbol.PType.PINT) || s.type.equals(Symbol.PType.PSTRING))
-                {
-                    System.err.println("A variavel " + variableName + " na linha " + ctx.start.getLine() + " é do tipo INT"  + " e a função é do tipo "  +  s.type);
-                    ++this.semanticErrors;
-                    return;
+                    if (s.type.equals(Symbol.PType.FLOAT) || s.type.equals(Symbol.PType.BOOL) || s.type.equals(Symbol.PType.STRING) || s.type.equals(Symbol.PType.PFLOAT) || s.type.equals(Symbol.PType.PINT) || s.type.equals(Symbol.PType.PSTRING)) {
+                        System.err.println("A variavel " + variableName + " na linha " + ctx.start.getLine() + " é do tipo INT" + " e a função é do tipo " + s.type);
+                        ++this.semanticErrors;
+                        return;
+                    }
                 }
             }
+            exprType.put(ctx, Symbol.PType.INT);
         }
-        exprType.put(ctx, Symbol.PType.INT);
     }
     public void enterInteiros(alg.InteirosContext ctx) { }
     public void exitInteiros(alg.InteirosContext ctx)
@@ -380,27 +381,28 @@ public class TypeChecker extends algBaseListener {
     public void enterReal(alg.RealContext ctx) { }
     public void exitReal(alg.RealContext ctx)
     {
-        if(ctx.equals().getChildCount() == 2)
-        {
+        if(ctx.equals().getChildCount() == 2 && ctx.equals().function_invocate()!=null) {
             String variableName = ctx.IDENT().get(0).getText();
-            String name = ctx.equals().expr().get(0).getChild(0).getChild(0).getText();
-            Symbol s = this.currentScope.resolve(name);
-            if(s != null) {
-                if (s.type.equals(Symbol.PType.VOID)) {
-                    System.err.println("A função " + name + " na linha " + ctx.start.getLine() + " é do tipo VOID e não retorna nenhum valor");
-                    ++this.semanticErrors;
-                    return;
-                }
+            Symbol oi = this.currentScope.resolve(variableName);
+            if (oi != null) {
+                String name = ctx.equals().expr().get(0).getChild(0).getChild(0).getText();
+                Symbol s = this.currentScope.resolve(name);
+                if (s != null) {
+                    if (s.type.equals(Symbol.PType.VOID)) {
+                        System.err.println("A função " + name + " na linha " + ctx.start.getLine() + " é do tipo VOID e não retorna nenhum valor");
+                        ++this.semanticErrors;
+                        return;
+                    }
 
-                if(s.type.equals(Symbol.PType.STRING) || s.type.equals(Symbol.PType.BOOL)|| s.type.equals(Symbol.PType.PFLOAT) || s.type.equals(Symbol.PType.PINT) || s.type.equals(Symbol.PType.PSTRING))
-                {
-                    System.err.println("A variavel " + variableName + " na linha " + ctx.start.getLine() + " é do tipo FLOAT "  + " e a função é do tipo "  +  s.type);
-                    ++this.semanticErrors;
-                    return;
+                    if (s.type.equals(Symbol.PType.STRING) || s.type.equals(Symbol.PType.BOOL) || s.type.equals(Symbol.PType.PFLOAT) || s.type.equals(Symbol.PType.PINT) || s.type.equals(Symbol.PType.PSTRING)) {
+                        System.err.println("A variavel " + variableName + " na linha " + ctx.start.getLine() + " é do tipo FLOAT " + " e a função é do tipo " + s.type);
+                        ++this.semanticErrors;
+                        return;
+                    }
                 }
             }
+            exprType.put(ctx, Symbol.PType.FLOAT);
         }
-        exprType.put(ctx, Symbol.PType.FLOAT);
     }
     public void enterReais(alg.ReaisContext ctx) { }
     public void exitReais(alg.ReaisContext ctx) {
@@ -412,7 +414,9 @@ public class TypeChecker extends algBaseListener {
     }
     public void enterEquals_string(alg.Equals_stringContext ctx) { }
     public void exitEquals_string(alg.Equals_stringContext ctx) { }
-    public void enterCadeia_caracteres(alg.Cadeia_caracteresContext ctx) { }
+    public void enterCadeia_caracteres(alg.Cadeia_caracteresContext ctx) {
+
+    }
 
     public void exitCadeia_caracteres(alg.Cadeia_caracteresContext ctx)
     {
@@ -477,7 +481,9 @@ public class TypeChecker extends algBaseListener {
     }
 
     public void enterCadeias_caracteres(alg.Cadeias_caracteresContext ctx) { }
-    public void exitCadeias_caracteres(alg.Cadeias_caracteresContext ctx) { }
+    public void exitCadeias_caracteres(alg.Cadeias_caracteresContext ctx) {
+
+    }
     public void enterPonteiro_inteiro(alg.Ponteiro_inteiroContext ctx) { }
 
     public void exitPonteiro_inteiro(alg.Ponteiro_inteiroContext ctx) {
