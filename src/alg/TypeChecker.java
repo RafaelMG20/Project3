@@ -224,7 +224,12 @@ public class TypeChecker extends algBaseListener {
 
     public void exitFuncInv(alg.FuncInvContext ctx)
     {
-
+        String name = ctx.function_invocate().IDENT().getText();
+        Symbol s = this.currentScope.resolve(name);
+        if(s!=null)
+        {
+            this.exprType.put(ctx,s.type);
+        }
     }
 
     public void enterPointer(alg.PointerContext ctx) { }
@@ -691,6 +696,36 @@ public class TypeChecker extends algBaseListener {
 
     public void exitFunction_declare(alg.Function_declareContext ctx)
     {
+        /*String type = ctx.IDENT().getText();
+        if(type.equals(Symbol.PType.INT))
+        {
+            this.exprType.put(ctx, Symbol.PType.INT);
+        }
+        else if(type.equals(Symbol.PType.FLOAT))
+        {
+            this.exprType.put(ctx, Symbol.PType.FLOAT);
+        }
+        else if(type.equals(Symbol.PType.STRING))
+        {
+            this.exprType.put(ctx, Symbol.PType.STRING);
+        }
+        else if(type.equals(Symbol.PType.BOOL))
+        {
+            this.exprType.put(ctx, Symbol.PType.BOOL);
+        }
+        else if(type.equals(Symbol.PType.PINT))
+        {
+            this.exprType.put(ctx, Symbol.PType.PINT);
+        }
+        else if(type.equals(Symbol.PType.PFLOAT))
+        {
+            this.exprType.put(ctx, Symbol.PType.PFLOAT);
+        }
+        else if(type.equals(Symbol.PType.PSTRING))
+        {
+            this.exprType.put(ctx, Symbol.PType.PSTRING);
+        }
+        //this.exprType.put(ctx,);*/
     }
     public void enterBody(alg.BodyContext ctx) { }
     public void exitBody(alg.BodyContext ctx) {
@@ -739,6 +774,8 @@ public class TypeChecker extends algBaseListener {
         }
         this.currentFunction = null;
         this.currentScope = this.currentScope.getParentScope();
+        /*Symbol.PType value_type = (Symbol.PType)this.exprType.get(ctx.body().instructions(count-1).ctrl_instruct().expressions_list2().expr());
+        this.exprType.put(ctx,value_type);*/
     }
 
     public void enterFunction_invocate(alg.Function_invocateContext ctx) { }
@@ -746,10 +783,19 @@ public class TypeChecker extends algBaseListener {
     public void exitFunction_invocate(alg.Function_invocateContext ctx)
     {
         //FALTA ADICIONAR QUANDO SE PODE METER REAL COMO INTEIRO, OU NULL COMO PONTEIRO)
+        if(ctx.WRITE() != null)
+        {
+
+        }
+        else if(ctx.WRITELN()!=null)
+        {
+
+        }
+        else {
         String name = ctx.IDENT().getText();
         Symbol s = this.currentScope.resolve(name);
         int countArgs = 0;
-        if(ctx.getChildCount() > 4) {
+        if (ctx.getChildCount() > 4) {
             for (int i = 0; i < ctx.getChildCount(); i++) {
                 if (ctx.getChild(i).getText().equals(","))
                     countArgs++;
@@ -757,87 +803,63 @@ public class TypeChecker extends algBaseListener {
 
             if (countArgs > 0)
                 countArgs += 1;
-        }
-
-        else if(ctx.getChildCount() == 4)
+        } else if (ctx.getChildCount() == 4)
             countArgs = 1;
 
 
-        if(s instanceof FunctionSymbol)
-        {
+        if (s instanceof FunctionSymbol) {
             int args = ((FunctionSymbol) s).arguments.size();
-            if(args < countArgs)
-            {
-                System.err.println("A chamada à função " + name + " na linha " + ctx.start.getLine() + " tem demasiados argumentos. Retire " + (countArgs-args));
+            if (args < countArgs) {
+                System.err.println("A chamada à função " + name + " na linha " + ctx.start.getLine() + " tem demasiados argumentos. Retire " + (countArgs - args));
                 ++this.semanticErrors;
                 return;
-            }
-            else if(args > countArgs)
-            {
-                System.err.println("A chamada à função " + name + " na linha " + ctx.start.getLine() + " tem poucos argumentos. Adicione " + (-(countArgs-args)));
+            } else if (args > countArgs) {
+                System.err.println("A chamada à função " + name + " na linha " + ctx.start.getLine() + " tem poucos argumentos. Adicione " + (-(countArgs - args)));
                 ++this.semanticErrors;
                 return;
-            }
-
-
-            else
-            {
+            } else {
                 int temporary = this.semanticErrors;
                 int z = 0;
-                for (int i = 2; i<ctx.getChildCount()-1; i+=2)
-                {
+                for (int i = 2; i < ctx.getChildCount() - 1; i += 2) {
                     String temp = ctx.getChild(i).getChild(0).getText();
                     Symbol name2 = this.currentScope.resolve(temp);
-                    if(name2 != null)
-                    {
-                        if(name2.type.equals(Symbol.PType.INT)||name2.type.equals(Symbol.PType.FLOAT))
-                        {
-                            if(!((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.INT) && !((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.FLOAT) )
-                            {
+                    if (name2 != null) {
+                        if (name2.type.equals(Symbol.PType.INT) || name2.type.equals(Symbol.PType.FLOAT)) {
+                            if (!((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.INT) && !((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.FLOAT)) {
 
-                                System.err.println("A variavel " + name2.name + " na linha " + ctx.start.getLine() + " deve ser do tipo " + ((FunctionSymbol) s).arguments.get(z).type );
+                                System.err.println("A variavel " + name2.name + " na linha " + ctx.start.getLine() + " deve ser do tipo " + ((FunctionSymbol) s).arguments.get(z).type);
                                 ++this.semanticErrors;
                             }
-                        }
-
-                        else if(name2.type.equals(Symbol.PType.PNULL))
-                        {
+                        } else if (name2.type.equals(Symbol.PType.PNULL)) {
                             System.out.println("pnull " + ((FunctionSymbol) s).arguments.get(z).type);
-                            if(!((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.PSTRING) && !((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.PFLOAT) && !((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.PINT) )
-                            {
+                            if (!((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.PSTRING) && !((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.PFLOAT) && !((FunctionSymbol) s).arguments.get(z).type.equals(Symbol.PType.PINT)) {
 
-                                System.err.println("A variavel " + name2.name + " na linha " + ctx.start.getLine() + " deve ser do tipo " + ((FunctionSymbol) s).arguments.get(z).type );
+                                System.err.println("A variavel " + name2.name + " na linha " + ctx.start.getLine() + " deve ser do tipo " + ((FunctionSymbol) s).arguments.get(z).type);
                                 ++this.semanticErrors;
                             }
-                        }
-                        else if(!name2.type.equals(((FunctionSymbol) s).arguments.get(z).type))
-                        {
+                        } else if (!name2.type.equals(((FunctionSymbol) s).arguments.get(z).type)) {
 
-                            System.err.println("A variavel " + name2.name + " na linha " + ctx.start.getLine() + " deve ser do tipo " + ((FunctionSymbol) s).arguments.get(z).type );
+                            System.err.println("A variavel " + name2.name + " na linha " + ctx.start.getLine() + " deve ser do tipo " + ((FunctionSymbol) s).arguments.get(z).type);
                             ++this.semanticErrors;
                         }
                     }
                     z++;
                 }
-               if(temporary == this.semanticErrors)
-                   this.exprType.put(ctx,s.type);
+                if (temporary == this.semanticErrors)
+                    this.exprType.put(ctx, s.type);
             }
 
-        }
-        else if(s==null)
-        {
+        } else if (s == null) {
             System.err.println("Função " + name + " indefinida na linha " + ctx.IDENT().getSymbol().getLine() + " posição " + ctx.IDENT().getSymbol().getCharPositionInLine());
             ++this.semanticErrors;
             //exprType.put(ctx,Symbol.PType.ERROR);
             this.exprType.put(ctx, Symbol.PType.ERROR);
-        }
-
-        else if(!(s instanceof FunctionSymbol))
-        {
+        } else if (!(s instanceof FunctionSymbol)) {
             System.err.println("A usar a variável " + name + " como função, na linha " + ctx.IDENT().getSymbol().getLine());
             ++this.semanticErrors;
             this.exprType.put(ctx, Symbol.PType.ERROR);
         }
+    }
 
 
     }
