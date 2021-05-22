@@ -98,7 +98,7 @@ logics : LP (expr*) (E_LOGICO|OU_LOGICO) (expr*) RP EQUAL_DIF ('true'|'false') ;
 
 
 expressions_list: comparations |(expr PONTO_VIRGULA) ;
-expressions_list2: comparations |  expr | CADEIA_CARACTERES | BOOL;
+expressions_list2: comparations |  expr | CADEIA_CARACTERES ;
 arg : type IDENT;
 //foram adicionados o args e o type, com alterações no function declare
 args : arg (',' arg)*;

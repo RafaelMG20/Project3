@@ -1,14 +1,13 @@
-int rafa()
+
+int rafa(int z)
 {
-bool teste = true;
-return teste;
+ola = 'oi';
+return z;
 }
 
-int rafa2()
+void rafel()
 {
-teste = false;
-int z = 2;
-return teste;
+olah = 'hey';
 }
 
 

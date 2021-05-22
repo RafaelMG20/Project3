@@ -132,7 +132,7 @@ public class TypeChecker extends algBaseListener {
     {
 
             Symbol temp = this.globalScope.resolve(s.name);
-            if(!this.globalScope.define(s))
+            if(temp!=null)
             {
 
                 System.err.println("Redefinindo a variavel " + s.name + " previamente definida, na linha " + ctx.start.getLine());

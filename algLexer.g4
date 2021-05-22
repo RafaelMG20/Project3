@@ -46,7 +46,7 @@ LITERAL_INTEIRO : ('0' | ([1-9][0-9]*));
 LITERAL_DECIMAL : LITERAL_INTEIRO'.'[0-9]+;
 LITERAL_EXPONENCIAL :  [0-9] ('.'[0-9]+)? (('e'|'E')('+'|'-'|) [0-9]+)?;
 
-CADEIA_CARACTERES : '\'' ('\u0001'..'\u{FFFF}')+ '\'' ;
+CADEIA_CARACTERES : '\'' ('\u0001'..'\u{FFFF}')+? '\'' ;
 
 /*OPERATOR :  '(' |
             ')' |
