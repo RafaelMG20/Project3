@@ -77,8 +77,8 @@ cadeia_caracteres: STRING? IDENT (INDEX_POINT_L(IDENT|LITERAL_INTEIRO) INDEX_POI
 //---------------
 
 cadeias_caracteres : STRING IDENT (',' IDENT)*;
-ponteiro_inteiro : MENORQ INT MAIORQ IDENT (EQUAL (expr* |NULL | ('[' expr* ']')))?;
-ponteiro_real : MENORQ FLOAT MAIORQ IDENT (EQUAL (expr* |NULL | ('[' expr* ']')))?;
+ponteiro_inteiro : MENORQ INT MAIORQ IDENT (EQUAL (function_invocate|expr* |NULL | ('[' expr* ']')))?;
+ponteiro_real : MENORQ FLOAT MAIORQ IDENT (EQUAL (function_invocate|expr* |NULL | ('[' expr* ']')))?;
 ponteiro_cadeia : MENORQ STRING MAIORQ IDENT (EQUAL (CADEIA_CARACTERES|function_invocate|NULL | ('[' expr* ']')) );
 
 //expression: (function_invocate | LITERAL_INTEIRO | LITERAL_DECIMAL | LITERAL_EXPONENCIAL | CADEIA_CARACTERES | IDENT) PONTO_VIRGULA ;

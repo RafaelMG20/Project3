@@ -236,6 +236,39 @@ public class TypeChecker extends algBaseListener {
 
     public void exitPointer(alg.PointerContext ctx)
     {
+        Symbol.PType e1 = (Symbol.PType)this.exprType.get(ctx.op_pointer().expr(0));
+        if(e1 == Symbol.PType.INT || e1 == Symbol.PType.PINT)
+        {
+            this.exprType.put(ctx, Symbol.PType.PINT);
+        }
+        else if(e1 == Symbol.PType.FLOAT || e1 == Symbol.PType.PFLOAT)
+        {
+            this.exprType.put(ctx, Symbol.PType.PFLOAT);
+        }
+        else if(e1 == Symbol.PType.STRING || e1 == Symbol.PType.PSTRING)
+        {
+            this.exprType.put(ctx, Symbol.PType.PSTRING);
+        }
+
+        String name = ctx.getParent().getParent().getChild(0).getText();
+        if(name.equals("int") || name.equals("float") || name.equals("string") || name.equals("bool"))
+        {
+            System.err.println("Para reserva memória na linha " + ctx.start.getLine() + " a variavel deve ser um ponteiro e não do tipo: INT/FLOAT/STRING/BOOL " );
+            ++this.semanticErrors;
+        }
+
+        else if (!name.equals("int") || !name.equals("float") || !name.equals("string") || !name.equals("bool") || !name.equals("int") || !name.equals("float") || !name.equals("string") )
+        {
+            Symbol s = this.currentScope.resolve(name);
+            if(s!=null)
+            {
+                if(s.type == Symbol.PType.INT || s.type == Symbol.PType.FLOAT || s.type == Symbol.PType.STRING || s.type == Symbol.PType.BOOL)
+                {
+                    System.err.println("Para reserva memória na linha " + ctx.start.getLine() + " a variavel deve ser um ponteiro e não do tipo " + s.type);
+                    ++this.semanticErrors;
+                }
+            }
+        }
 
     }
 
@@ -492,7 +525,7 @@ public class TypeChecker extends algBaseListener {
     public void enterPonteiro_inteiro(alg.Ponteiro_inteiroContext ctx) { }
 
     public void exitPonteiro_inteiro(alg.Ponteiro_inteiroContext ctx) {
-       if(ctx.getChildCount() == 6)
+       if(ctx.getChildCount() == 6 && ctx.function_invocate()!=null)
         {
             if(ctx.expr(0).getChild(0).getChild(ctx.expr(0).getChild(0).getChildCount()-1).getText().equals(")"))
             {
@@ -522,7 +555,7 @@ public class TypeChecker extends algBaseListener {
     public void enterPonteiro_real(alg.Ponteiro_realContext ctx) { }
 
     public void exitPonteiro_real(alg.Ponteiro_realContext ctx) {
-        if(ctx.getChildCount() == 6)
+        if(ctx.getChildCount() == 6 && ctx.function_invocate()!=null)
         {
             if(ctx.expr(0).getChild(0).getChild(ctx.expr(0).getChild(0).getChildCount()-1).getText().equals(")"))
             {
@@ -551,7 +584,7 @@ public class TypeChecker extends algBaseListener {
     public void enterPonteiro_cadeia(alg.Ponteiro_cadeiaContext ctx) { }
 
     public void exitPonteiro_cadeia(alg.Ponteiro_cadeiaContext ctx) {
-        if(ctx.getChildCount() == 6)
+        if(ctx.getChildCount() == 6 && ctx.function_invocate()!=null)
         {
             if(ctx.function_invocate().getChild((ctx.function_invocate().getChildCount()-1)).getText().equals((")")))
             {
@@ -783,13 +816,23 @@ public class TypeChecker extends algBaseListener {
     public void exitFunction_invocate(alg.Function_invocateContext ctx)
     {
         //FALTA ADICIONAR QUANDO SE PODE METER REAL COMO INTEIRO, OU NULL COMO PONTEIRO)
-        if(ctx.WRITE() != null)
+        if(ctx.WRITE() != null || ctx.WRITELN() != null)
         {
-
-        }
-        else if(ctx.WRITELN()!=null)
-        {
-
+            int childCount = ctx.getChildCount();
+            int exprIDX = 0;
+            for (int i=0;i<childCount;i++)
+            {
+                if(ctx.getChild(i)==ctx.expr(exprIDX))
+                {
+                    Symbol.PType e1 = (Symbol.PType)this.exprType.get(ctx.expr(exprIDX));
+                    if(e1 != Symbol.PType.INT && e1 != Symbol.PType.FLOAT && e1 != Symbol.PType.STRING && e1 != Symbol.PType.BOOL)
+                    {
+                        System.err.println("Ao utilizar write/writeln na linha " + ctx.start.getLine() + " os argumentos utilizados apenas devem ser do tipo primitivo: INT,BOOL,STRING,FLOAT.");
+                        ++this.semanticErrors;
+                    }
+                    exprIDX++;
+                }
+            }
         }
         else {
         String name = ctx.IDENT().getText();
