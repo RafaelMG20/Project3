@@ -276,6 +276,12 @@ public interface algVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBody(alg.BodyContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link alg#body2}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBody2(alg.Body2Context ctx);
+	/**
 	 * Visit a parse tree produced by {@link alg#prologo}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

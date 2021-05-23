@@ -65,7 +65,7 @@ booleanos : BOOL IDENT (',' IDENT)*;
 // exemplo de não fatoração À esquerda
 //real : FLOAT IDENT (INDEX_POINT_L(IDENT|LITERAL_INTEIRO) INDEX_POINT_R)? (EQUAL expr*)?;
 // resolução
-real : FLOAT IDENT (INDEX_POINT_L(IDENT|LITERAL_INTEIRO) INDEX_POINT_R)? equals;
+real : FLOAT? IDENT (INDEX_POINT_L(IDENT|LITERAL_INTEIRO) INDEX_POINT_R)? equals;
 reais : FLOAT IDENT (',' IDENT)*;
 
 
@@ -89,6 +89,7 @@ op_pointer : INDEX_POINT_L (expr*) INDEX_POINT_R;
 // ide foi alterado
 ide : SOMA_SUB expr?;
 
+//idy foi adicionado
 idy : IDEY IDENT;
 
 
@@ -106,8 +107,10 @@ function_declare : type IDENT LP args? RP;
 type: (INT|FLOAT|BOOL|STRING|VOID|(MENORQ (INT|FLOAT|STRING) MAIORQ));
 
 body : L_BRACE (variable | function_invocate PONTO_VIRGULA | instructions)* instructions R_BRACE;
-prologo: AT_SIGN body;
-epilogo: D_MAIORQ body;
+//foi adicionado o body2
+body2 : L_BRACE (variable | function_invocate PONTO_VIRGULA | instructions)* R_BRACE;
+prologo: AT_SIGN body2;
+epilogo: D_MAIORQ body2;
 
 function: function_declare prologo? body epilogo?;
 
@@ -129,9 +132,9 @@ sub_block : L_BRACE instructions* R_BRACE;
 
 
 variable:
-    (inteiro | inteiros
+    (inteiro | real  | inteiros
     | booleano| booleanos
-    | real| reais
+    | reais
     | cadeia_caracteres| cadeias_caracteres
     | ponteiro_inteiro | ponteiro_real | ponteiro_cadeia) PONTO_VIRGULA;
 

@@ -454,6 +454,16 @@ public interface algListener extends ParseTreeListener {
 	 */
 	void exitBody(alg.BodyContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link alg#body2}.
+	 * @param ctx the parse tree
+	 */
+	void enterBody2(alg.Body2Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link alg#body2}.
+	 * @param ctx the parse tree
+	 */
+	void exitBody2(alg.Body2Context ctx);
+	/**
 	 * Enter a parse tree produced by {@link alg#prologo}.
 	 * @param ctx the parse tree
 	 */

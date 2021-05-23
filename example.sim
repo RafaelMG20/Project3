@@ -1,8 +1,18 @@
 int rafa(int z)
+@{
+float rafa0 = 2+2.2;
+rafa2 = 2;
+}
 {
-z = [5];
-write(z);
+rafa0 = 1;
+int rafa1;
+rafa2 = 3;
 return 0;
+}
+>>{
+rafa0 = 2;
+rafa1 = 3;
+int rafa2;
 }
 
 

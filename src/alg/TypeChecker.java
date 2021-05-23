@@ -253,7 +253,7 @@ public class TypeChecker extends algBaseListener {
         String name = ctx.getParent().getParent().getChild(0).getText();
         if(name.equals("int") || name.equals("float") || name.equals("string") || name.equals("bool"))
         {
-            System.err.println("Para reserva memória na linha " + ctx.start.getLine() + " a variavel deve ser um ponteiro e não do tipo: INT/FLOAT/STRING/BOOL " );
+            System.err.println("Para reservar memória na linha " + ctx.start.getLine() + " a variavel deve ser um ponteiro e não do tipo: INT/FLOAT/STRING/BOOL " );
             ++this.semanticErrors;
         }
 
@@ -264,7 +264,7 @@ public class TypeChecker extends algBaseListener {
             {
                 if(s.type == Symbol.PType.INT || s.type == Symbol.PType.FLOAT || s.type == Symbol.PType.STRING || s.type == Symbol.PType.BOOL)
                 {
-                    System.err.println("Para reserva memória na linha " + ctx.start.getLine() + " a variavel deve ser um ponteiro e não do tipo " + s.type);
+                    System.err.println("Para reservar memória na linha " + ctx.start.getLine() + " a variavel deve ser um ponteiro e não do tipo " + s.type);
                     ++this.semanticErrors;
                 }
             }
@@ -970,6 +970,7 @@ public class TypeChecker extends algBaseListener {
     {
         if(ctx.inteiro() != null)
         {
+
             if(ctx.inteiro().INDEX_POINT_L() != null)
             {
                 Symbol s1 = this.currentScope.resolve(ctx.inteiro().getChild(0).getText());
@@ -992,6 +993,28 @@ public class TypeChecker extends algBaseListener {
             {
                 defineSymbol(ctx,new Symbol(ctx.getChild(0).getChild(0).getText(),ctx.getChild(0).getChild(1).getText()));
                 exprType.put(ctx, Symbol.PType.INT);
+            }
+
+            if(ctx.inteiro().equals().getChildCount() == 2)
+            {
+                Symbol.PType e1 = this.exprType.get(ctx.inteiro().equals().getChild(1));
+                String name = ctx.inteiro().IDENT(0).getText();
+                Symbol s = this.currentScope.resolve(name);
+                if(s==null)
+                {
+                    System.err.println("Variável " + name + " indefinida na linha " + ctx.start.getLine() + " posição " + ctx.inteiro().IDENT(0).getSymbol().getCharPositionInLine() );
+                    ++this.semanticErrors;
+                    return;
+                }
+                else if(e1!=null)
+                {
+                    if(e1 == Symbol.PType.FLOAT)
+                    {
+                        System.err.println("Na linha " + ctx.start.getLine() + " deve atribuir um valor do tipo INT e não do tipo " + e1);
+                        ++this.semanticErrors;
+                        return;
+                    }
+                }
             }
 
             else
