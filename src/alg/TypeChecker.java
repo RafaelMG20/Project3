@@ -410,6 +410,29 @@ public class TypeChecker extends algBaseListener {
                     ++this.semanticErrors;
                     return;
                 }
+
+
+            }
+        }
+       //'true'|'false'|function_invocate
+        if(ctx.TRUE() == null && ctx.FALSE()==null && ctx.function_invocate()==null)
+        {
+            String variableName = ctx.IDENT().getText();
+            Symbol s = this.currentScope.resolve(variableName);
+            if(s != null) {
+                if(s.type.equals(Symbol.PType.BOOL))
+                {
+                    System.err.println("A variavel " + variableName + " na linha " + ctx.start.getLine() + " é do tipo BOOL "  + " e a atribuição está errada");
+                    ++this.semanticErrors;
+                    return;
+                }
+            }
+
+            if(ctx.EQUAL() != null)
+            {
+                System.err.println("A variavel " + variableName + " na linha " + ctx.start.getLine() + " é do tipo BOOL "  + " e a atribuição está errada");
+                ++this.semanticErrors;
+                return;
             }
         }
     }
