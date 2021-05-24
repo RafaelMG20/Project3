@@ -1,5 +1,7 @@
-void rafa(int z)
-{
+int rafa(int z) {
+int a = 0;
+if(a<2)
+then leave;
 return;
 }
 
