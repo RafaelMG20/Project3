@@ -793,6 +793,10 @@ public class TypeChecker extends algBaseListener {
                     if (ctx.instructions(i).sub_block().instructions(j).ctrl_instruct() != null && ctx.instructions(i).sub_block().instructions(count2-1).ctrl_instruct() != null) {
                         if ((ctx.instructions(i).sub_block().instructions(count2-1).ctrl_instruct().RETURN() != null) && (ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().RETURN() != null && j != count2 - 1))
                             System.err.println("Só pode ser invocado um return no subbloco, existe outro na linha " + ctx.instructions(i).sub_block().instructions(j).start.getLine());
+                    }if(ctx.instructions(i).sub_block().instructions(j).ctrl_instruct() != null && ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().LEAVE() != null) {
+                        System.err.println("Intrução LEAVE da linha " + ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " apenas pode ser chamado num ciclo");
+                    }if(ctx.instructions(i).sub_block().instructions(j).ctrl_instruct() != null && ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().RESTART() != null ){
+                        System.err.println("Intrução RESTART da linha " + ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " apenas pode ser chamado num ciclo");
                     }
                 }
             }else{
@@ -800,6 +804,10 @@ public class TypeChecker extends algBaseListener {
                     if ((ctx.instructions(count-1).ctrl_instruct().RETURN() != null) && (ctx.instructions(i).ctrl_instruct().RETURN() != null && i != count - 1))
                         System.err.println("Só pode ser invocado um return na função, existe outro na linha " + ctx.instructions(i).start.getLine());
                 }
+            }if(ctx.instructions(i).ctrl_instruct() != null && ctx.instructions(i).ctrl_instruct().LEAVE() != null) {
+                System.err.println("Intrução LEAVE da linha " + ctx.instructions(i).ctrl_instruct().start.getLine() + " apenas pode ser chamado num ciclo");
+            }if(ctx.instructions(i).ctrl_instruct() != null && ctx.instructions(i).ctrl_instruct().RESTART() != null ){
+                System.err.println("Intrução RESTART da linha " + ctx.instructions(i).ctrl_instruct().start.getLine() + " apenas pode ser chamado num ciclo");
             }
         }
     }
@@ -817,24 +825,24 @@ public class TypeChecker extends algBaseListener {
             boolean return_has_value = ctx.body().instructions(count-1).ctrl_instruct().expressions_list2() != null;
             if(return_has_value){
                 if(type_function.equals("VOID")) {
-                    System.err.println("Função é do tipo " + type_function + " return não pode retornar valor");
+                    System.err.println("Função" +"'"+ ctx.function_declare().IDENT()+"'" +" na linha " + ctx.function_declare().start.getLine() + " é do tipo " + type_function + " return não pode retornar valor");
                     ++this.semanticErrors;
                 }else{
                     Symbol.PType value_type = (Symbol.PType)this.exprType.get(ctx.body().instructions(count-1).ctrl_instruct().expressions_list2().expr());
                     if(!type_function.equals(value_type.toString())){
-                        System.err.println("A função é do tipo " + type_function + " e o valor retornado é do tipo " + value_type.toString());
+                        System.err.println("Função" +"'"+ctx.function_declare().IDENT()+"'" +" na linha " + ctx.function_declare().start.getLine() + " é do tipo " + type_function + " e o valor retornado é do tipo " + value_type.toString());
                         ++this.semanticErrors;
                     }
                 }
             }else{
                 if(!type_function.equals("VOID")){
-                    System.err.println("Return deve retornar valor");
+                    System.err.println("Return na linha "+ ctx.body().instructions(count-1).ctrl_instruct().start.getLine() + " deve retornar valor");
                     ++this.semanticErrors;
                 }
             }
         }else{
             if(!type_function.equals("VOID")) {
-                System.err.println("Função é do tipo "+ type_function + " logo deve ter return no fim");
+                System.err.println("Função "+"'"+ctx.function_declare().IDENT()+"'" +" na linha " + ctx.function_declare().start.getLine() +  " é do tipo "+ type_function + " logo deve ter return no fim");
                 ++this.semanticErrors;
             }
         }
