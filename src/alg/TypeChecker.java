@@ -803,7 +803,7 @@ public class TypeChecker extends algBaseListener {
     public void exitFunction(alg.FunctionContext ctx) {
         String type_function = ctx.function_declare().type().getText().toUpperCase(Locale.ROOT);
         int count = ctx.body().instructions().size();
-        if(ctx.body().instructions(count-1).ctrl_instruct() != null && ctx.body().instructions(count-1).ctrl_instruct().RETURN() != null){
+        if(count > 0 && ctx.body().instructions(count-1).ctrl_instruct() != null && ctx.body().instructions(count-1).ctrl_instruct().RETURN() != null){
             boolean return_has_value = ctx.body().instructions(count-1).ctrl_instruct().expressions_list2() != null;
             if(return_has_value){
                 if(type_function.equals("VOID")) {
