@@ -25,70 +25,6 @@ public class TypeChecker extends algBaseListener {
 
     private boolean defineSymbol(ParserRuleContext ctx, Symbol s)
     {
-        /*if(this.globalScope != this.currentScope)
-        {
-            Symbol temp = this.globalScope.resolve(s.name);
-            if(!this.globalScope.define(s))
-            {
-
-                System.err.println("Redefining previously defined variable " + s.name + " in line " + ctx.start.getLine());
-                ++this.semanticErrors;
-                return false;
-            }
-            if(this.globalScope.containsName(s.name))
-            {
-                if(temp !=null)
-                {
-                    if(temp instanceof FunctionSymbol)
-                    {
-                        System.err.println("A variavel " + s.name + " na linha " + ctx.start.getLine() + " é uma função");
-                        ++this.semanticErrors;
-                        return false;
-                    }
-                    if(!temp.type.equals(s.type))
-                    {
-                        System.err.println("A variavel " + s.name + " na linha " + ctx.start.getLine() + " é do tipo " + temp.type);
-                        ++this.semanticErrors;
-                        return false;
-                    }
-                }
-
-            }
-
-        }
-         if(this.currentScope.containsName(s.name))
-        {
-            Symbol temp = this.globalScope.resolve(s.name);
-            if(temp !=null)
-            {
-                if(!temp.type.equals(s.type))
-                {
-                    System.err.println("A variavel " + s.name + " na linha " + ctx.start.getLine() + " é do tipo " + temp.type);
-                    ++this.semanticErrors;
-                    return false;
-                }
-            }
-        }
-        if (!this.currentScope.define(s)) {
-            Symbol temp = this.currentScope.resolve(s.name);
-            if(temp instanceof FunctionSymbol)
-            {
-                System.err.println("A variavel " + s.name + " na linha " + ctx.start.getLine() + " é uma função");
-                ++this.semanticErrors;
-                return false;
-            }
-
-            else{
-                String var10001 = s.name;
-            System.err.println("Redefining previously defined variable " + var10001 + " in line " + ctx.start.getLine());
-            ++this.semanticErrors;
-            return false;
-            }
-        } else {
-            this.exprType.put(ctx, s.type);
-            return true;
-        }
-         */
         if (!this.currentScope.define(s)) {
             String var10001 = s.name;
             System.err.println("Redefinindo variavel " + var10001 + " previamente definida, na linha " + ctx.start.getLine());
@@ -800,40 +736,9 @@ public class TypeChecker extends algBaseListener {
         }
     }
 
-    public void exitFunction_declare(alg.Function_declareContext ctx)
-    {
-        /*String type = ctx.IDENT().getText();
-        if(type.equals(Symbol.PType.INT))
-        {
-            this.exprType.put(ctx, Symbol.PType.INT);
-        }
-        else if(type.equals(Symbol.PType.FLOAT))
-        {
-            this.exprType.put(ctx, Symbol.PType.FLOAT);
-        }
-        else if(type.equals(Symbol.PType.STRING))
-        {
-            this.exprType.put(ctx, Symbol.PType.STRING);
-        }
-        else if(type.equals(Symbol.PType.BOOL))
-        {
-            this.exprType.put(ctx, Symbol.PType.BOOL);
-        }
-        else if(type.equals(Symbol.PType.PINT))
-        {
-            this.exprType.put(ctx, Symbol.PType.PINT);
-        }
-        else if(type.equals(Symbol.PType.PFLOAT))
-        {
-            this.exprType.put(ctx, Symbol.PType.PFLOAT);
-        }
-        else if(type.equals(Symbol.PType.PSTRING))
-        {
-            this.exprType.put(ctx, Symbol.PType.PSTRING);
-        }
-        //this.exprType.put(ctx,);*/
-    }
+    public void exitFunction_declare(alg.Function_declareContext ctx) { }
     public void enterBody(alg.BodyContext ctx) { }
+
     public void exitBody(alg.BodyContext ctx) {
         int count = ctx.instructions().size();
         for(int i = 0; i<count; i++){
@@ -994,12 +899,9 @@ public class TypeChecker extends algBaseListener {
             this.exprType.put(ctx, Symbol.PType.ERROR);
         }
     }
-
-
     }
 
     public void enterCtrl_instruct(alg.Ctrl_instructContext ctx) { }
-
     public void exitCtrl_instruct(alg.Ctrl_instructContext ctx) { }
     public void enterAttributes(alg.AttributesContext ctx) { }
     public void exitAttributes(alg.AttributesContext ctx) { }
@@ -1281,16 +1183,9 @@ public class TypeChecker extends algBaseListener {
                 else {
                     this.exprType.put(ctx, s.type);
                 }
-
             }
-
-
         }
-
-
-
     }
-
 
     private boolean isConvertibleTo(Symbol.PType from, Symbol.PType to) {
         if (from == to) {
@@ -1419,8 +1314,6 @@ public class TypeChecker extends algBaseListener {
             return false;
         }
     }
-
-
 
     public void enterEveryRule(ParserRuleContext ctx) { }
     public void exitEveryRule(ParserRuleContext ctx) { }
