@@ -825,12 +825,12 @@ public class TypeChecker extends algBaseListener {
             boolean return_has_value = ctx.body().instructions(count-1).ctrl_instruct().expressions_list2() != null;
             if(return_has_value){
                 if(type_function.equals("VOID")) {
-                    System.err.println("Função" +"'"+ ctx.function_declare().IDENT()+"'" +" na linha " + ctx.function_declare().start.getLine() + " é do tipo " + type_function + " return não pode retornar valor");
+                    System.err.println("Função" + "'" + ctx.function_declare().IDENT() + "'" + " na linha " + ctx.function_declare().start.getLine() + " é do tipo " + type_function + " return não pode retornar valor");
                     ++this.semanticErrors;
                 }else{
                     Symbol.PType value_type = (Symbol.PType)this.exprType.get(ctx.body().instructions(count-1).ctrl_instruct().expressions_list2().expr());
                     if(!type_function.equals(value_type.toString())){
-                        System.err.println("Função" +"'"+ctx.function_declare().IDENT()+"'" +" na linha " + ctx.function_declare().start.getLine() + " é do tipo " + type_function + " e o valor retornado é do tipo " + value_type.toString());
+                        System.err.println("Função" + "'" + ctx.function_declare().IDENT() + "'" + " na linha " + ctx.function_declare().start.getLine() + " é do tipo " + type_function + " e o valor retornado é do tipo " + value_type.toString());
                         ++this.semanticErrors;
                     }
                 }
