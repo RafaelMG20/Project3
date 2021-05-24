@@ -1,6 +1,6 @@
 void rafa(int z)
 {
-    string a = write(2);
+    int a = write(2);
     return 0;
 }
 
