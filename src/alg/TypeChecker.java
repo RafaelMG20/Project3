@@ -787,9 +787,19 @@ public class TypeChecker extends algBaseListener {
     public void exitBody(alg.BodyContext ctx) {
         int count = ctx.instructions().size();
         for(int i = 0; i<count; i++){
-            if(ctx.instructions(i).ctrl_instruct() != null && ctx.instructions(count-1).ctrl_instruct() != null) {
-                if ((ctx.instructions(count-1).ctrl_instruct().RETURN() != null) &&(ctx.instructions(i).ctrl_instruct().RETURN() != null && i != count - 1))
-                    System.err.println("Só pode ser invocado um return na função, existe outro na linha " + ctx.instructions(i).start.getLine());
+            if(ctx.instructions(i).sub_block() != null) {
+                int count2 = ctx.instructions(i).sub_block().instructions().size();
+                for (int j = 0; j < count2; j++) {
+                    if (ctx.instructions(i).sub_block().instructions(j).ctrl_instruct() != null && ctx.instructions(i).sub_block().instructions(count2-1).ctrl_instruct() != null) {
+                        if ((ctx.instructions(i).sub_block().instructions(count2-1).ctrl_instruct().RETURN() != null) && (ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().RETURN() != null && j != count2 - 1))
+                            System.err.println("Só pode ser invocado um return no subbloco, existe outro na linha " + ctx.instructions(i).sub_block().instructions(j).start.getLine());
+                    }
+                }
+            }else{
+                if(ctx.instructions(i).ctrl_instruct() != null && ctx.instructions(count-1).ctrl_instruct() != null) {
+                    if ((ctx.instructions(count-1).ctrl_instruct().RETURN() != null) && (ctx.instructions(i).ctrl_instruct().RETURN() != null && i != count - 1))
+                        System.err.println("Só pode ser invocado um return na função, existe outro na linha " + ctx.instructions(i).start.getLine());
+                }
             }
         }
     }

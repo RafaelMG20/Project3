@@ -1,6 +1,9 @@
-void rafa(int z)
-{
-
+int rafa(int z) {
+    {
+        return 0;
+        return 0;
+    }
+return 0;
 }
 
 
