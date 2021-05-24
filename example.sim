@@ -1,7 +1,5 @@
-int rafa(int z) {
-int a = 0;
-if(a<2)
-then leave;
+void rafa(int z)
+{
 return;
 }
 
