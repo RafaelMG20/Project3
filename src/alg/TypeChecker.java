@@ -19,24 +19,9 @@ public class TypeChecker extends algBaseListener {
     private FunctionSymbol currentFunction;
     public int semanticErrors;
 
-
     public ParseTreeProperty<Symbol.PType> exprType = new ParseTreeProperty<>();
 
     public ParseTreeProperty<Scope> scopes = new ParseTreeProperty<>();
-
-    /*
-
-    DUVIDAS
-
-    - SE DÁ ERRO NA OUTRA ANALISE É SUPOSTO MANDAR MENSAGEM DE ERRO AQUI TMB??
-
-    -
-
-    -
-
-    -
-     */
-
 
     private boolean defineSymbol(ParserRuleContext ctx, Symbol s)
     {
@@ -890,12 +875,12 @@ public class TypeChecker extends algBaseListener {
             boolean return_has_value = ctx.body().instructions(count-1).ctrl_instruct().expressions_list2() != null;
             if(return_has_value){
                 if(type_function.equals("VOID")) {
-                    System.err.println("Função " + "'" + ctx.function_declare().IDENT() + "'" + " na linha " + ctx.function_declare().start.getLine() + " é do tipo " + type_function + " return não pode retornar valor");
+                    System.err.println("Função " + "'" + ctx.function_declare().IDENT() + "'" + " na linha " + ctx.function_declare().start.getLine() + " é do tipo " + type_function + "," + " return na linha "+ ctx.body().instructions(count-1).ctrl_instruct().start.getLine() +" não pode retornar valor");
                     ++this.semanticErrors;
                 }else{
                     Symbol.PType value_type = (Symbol.PType)this.exprType.get(ctx.body().instructions(count-1).ctrl_instruct().expressions_list2().expr());
                     if(!type_function.equals(value_type.toString())){
-                        System.err.println("Função " + "'" + ctx.function_declare().IDENT() + "'" + " na linha " + ctx.function_declare().start.getLine() + " é do tipo " + type_function + " e o valor retornado é do tipo " + value_type.toString());
+                        System.err.println("Função " + "'" + ctx.function_declare().IDENT() + "'" + " na linha " + ctx.function_declare().start.getLine() + " é do tipo " + type_function + "," + " e o valor retornado é do tipo " + value_type.toString());
                         ++this.semanticErrors;
                     }
                 }
@@ -1441,6 +1426,11 @@ public class TypeChecker extends algBaseListener {
     public void exitEveryRule(ParserRuleContext ctx) { }
     public void visitTerminal(TerminalNode node) { }
     public void visitErrorNode(ErrorNode node) { }
-
-
 }
+
+//DUVIDAS
+/*  Subbloco numa função void deve conter return sem valor?
+    Subbloco numa função de qualquer tipo deve conter return do mesmo tipo?
+    Epilogo e Prologo deve ter return?
+    SE DÁ ERRO NA OUTRA ANALISE É SUPOSTO MANDAR MENSAGEM DE ERRO AQUI TAMBEM?
+ */

@@ -1,5 +1,9 @@
 void rafa(int z)
 {
+    {
+        return 0;
+    }
+    return 0;
     int a = write(2);
     return 0;
 }
