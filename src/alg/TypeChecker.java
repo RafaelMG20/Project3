@@ -306,9 +306,9 @@ public class TypeChecker extends algBaseListener {
             String variableName = ctx.IDENT().get(0).getText();
             Symbol oi = this.currentScope.resolve(variableName);
             if (oi != null || (ctx.INT()!=null && oi==null)) {
-                if (ctx.equals().function_invocate() == null && ctx.equals().expr() != null) {
+                if (ctx.equals().function_invocate() == null && ctx.equals().expr() == null && ctx.equals().getChildCount()!=0 && (ctx.equals().function_invocate().WRITE() != null || ctx.equals().function_invocate().WRITELN() != null)) {
 
-                    System.err.println("A variavel " + ctx.IDENT(0).getText() + " na linha " + ctx.start.getLine() + " é do tipo INT e a atribuição está errada.");
+                    System.err.println("A variavel " + ctx.IDENT(0).getText() + " na linha " + ctx.start.getLine() + " é do tipo INT e não se pode atribuir WRITE/WRITELN.");
                     this.semanticErrors++;
                     return;
                 }
@@ -421,7 +421,7 @@ public class TypeChecker extends algBaseListener {
             String variableName = ctx.IDENT().get(0).getText();
             Symbol oi = this.currentScope.resolve(variableName);
             if (oi != null || (ctx.FLOAT()!=null && oi==null)) {
-                if (ctx.equals().function_invocate() == null && ctx.equals().expr() != null) {
+                if (ctx.equals().function_invocate() == null && ctx.equals().expr() == null && (ctx.equals().function_invocate().WRITE() != null || ctx.equals().function_invocate().WRITELN() != null)) {
 
                     System.err.println("A variavel " + ctx.IDENT(0).getText() + " na linha " + ctx.start.getLine() + " é do tipo FLOAT e a atribuição está errada.");
                     this.semanticErrors++;
@@ -506,7 +506,7 @@ public class TypeChecker extends algBaseListener {
                     return;
                 }
             }
-            else if(ctx.STRING()!=null)
+            else if(ctx.STRING()!=null && ctx.equals_string().getChildCount()>0)
             {
                 System.err.println("A variavel " + variableName + " na linha " + ctx.start.getLine() + " é do tipo STRING" + " e a atribuição está errada.");
                 ++this.semanticErrors;
@@ -536,24 +536,31 @@ public class TypeChecker extends algBaseListener {
     public void exitPonteiro_inteiro(alg.Ponteiro_inteiroContext ctx) {
        if(ctx.getChildCount() == 6 && ctx.function_invocate()!=null)
         {
-            if(ctx.expr(0).getChild(0).getChild(ctx.expr(0).getChild(0).getChildCount()-1).getText().equals(")"))
-            {
-                String variableName = ctx.IDENT().getText();
-                String name = ctx.expr().get(0).getChild(0).getChild(0).getText();
-                Symbol s = this.currentScope.resolve(name);
-                if(s != null) {
-                    if (s.type.equals(Symbol.PType.VOID)) {
-                        System.err.println("A função " + name + " na linha " + ctx.start.getLine() + " é do tipo VOID e não retorna nenhum valor");
-                        ++this.semanticErrors;
-                        return;
-                    }
 
-                    if(s.type.equals(Symbol.PType.FLOAT) || s.type.equals(Symbol.PType.BOOL) || s.type.equals(Symbol.PType.STRING) || s.type.equals(Symbol.PType.PFLOAT) || s.type.equals(Symbol.PType.INT) || s.type.equals(Symbol.PType.PSTRING))
-                    {
-                        System.err.println("A variavel " + variableName + " na linha " + ctx.start.getLine() + " é do tipo PINT"  + " e a função é do tipo "  +  s.type);
-                        ++this.semanticErrors;
-                        return;
+            if(ctx.expr(0) != null) {
+                if (ctx.expr(0).getChild(0).getChild(ctx.expr(0).getChild(0).getChildCount() - 1).getText().equals(")")) {
+                    String variableName = ctx.IDENT().getText();
+                    String name = ctx.expr().get(0).getChild(0).getChild(0).getText();
+                    Symbol s = this.currentScope.resolve(name);
+                    if (s != null) {
+                        if (s.type.equals(Symbol.PType.VOID)) {
+                            System.err.println("A função " + name + " na linha " + ctx.start.getLine() + " é do tipo VOID e não retorna nenhum valor");
+                            ++this.semanticErrors;
+                            return;
+                        }
+
+                        if (s.type.equals(Symbol.PType.FLOAT) || s.type.equals(Symbol.PType.BOOL) || s.type.equals(Symbol.PType.STRING) || s.type.equals(Symbol.PType.PFLOAT) || s.type.equals(Symbol.PType.INT) || s.type.equals(Symbol.PType.PSTRING)) {
+                            System.err.println("A variavel " + variableName + " na linha " + ctx.start.getLine() + " é do tipo PINT" + " e a função é do tipo " + s.type);
+                            ++this.semanticErrors;
+                            return;
+                        }
                     }
+                }
+            }
+            Symbol s = this.currentScope.resolve(ctx.IDENT().getText());
+            if(s== null) {
+                if (ctx.function_invocate().WRITELN() != null || ctx.function_invocate().WRITE() != null) {
+                    System.err.println("A variável " + ctx.IDENT().getText() + " na linha " + ctx.IDENT().getSymbol().getLine() + " é do tipo PINT e não se pode atribuir WRITE/WRITELN");
                 }
             }
 
@@ -566,27 +573,33 @@ public class TypeChecker extends algBaseListener {
     public void exitPonteiro_real(alg.Ponteiro_realContext ctx) {
         if(ctx.getChildCount() == 6 && ctx.function_invocate()!=null)
         {
-            if(ctx.expr(0).getChild(0).getChild(ctx.expr(0).getChild(0).getChildCount()-1).getText().equals(")"))
-            {
-                String variableName = ctx.IDENT().getText();
-                String name = ctx.expr().get(0).getChild(0).getChild(0).getText();
-                Symbol s = this.currentScope.resolve(name);
-                if(s != null) {
-                    if (s.type.equals(Symbol.PType.VOID)) {
-                        System.err.println("A função " + name + " na linha " + ctx.start.getLine() + " é do tipo VOID e não retorna nenhum valor");
-                        ++this.semanticErrors;
-                        return;
-                    }
+            if(ctx.expr(0) != null) {
+                if (ctx.expr(0).getChild(0).getChild(ctx.expr(0).getChild(0).getChildCount() - 1).getText().equals(")")) {
+                    String variableName = ctx.IDENT().getText();
+                    String name = ctx.expr().get(0).getChild(0).getChild(0).getText();
+                    Symbol s = this.currentScope.resolve(name);
+                    if (s != null) {
+                        if (s.type.equals(Symbol.PType.VOID)) {
+                            System.err.println("A função " + name + " na linha " + ctx.start.getLine() + " é do tipo VOID e não retorna nenhum valor");
+                            ++this.semanticErrors;
+                            return;
+                        }
 
-                    if(s.type.equals(Symbol.PType.FLOAT) || s.type.equals(Symbol.PType.BOOL) || s.type.equals(Symbol.PType.STRING) || s.type.equals(Symbol.PType.INT) || s.type.equals(Symbol.PType.PINT) || s.type.equals(Symbol.PType.PSTRING))
-                    {
-                        System.err.println("A variavel " + variableName + " na linha " + ctx.start.getLine() + " é do tipo PFLOAT"  + " e a função é do tipo "  +  s.type);
-                        ++this.semanticErrors;
-                        return;
+                        if (s.type.equals(Symbol.PType.FLOAT) || s.type.equals(Symbol.PType.BOOL) || s.type.equals(Symbol.PType.STRING) || s.type.equals(Symbol.PType.INT) || s.type.equals(Symbol.PType.PINT) || s.type.equals(Symbol.PType.PSTRING)) {
+                            System.err.println("A variavel " + variableName + " na linha " + ctx.start.getLine() + " é do tipo PFLOAT" + " e a função é do tipo " + s.type);
+                            ++this.semanticErrors;
+                            return;
+                        }
                     }
                 }
             }
 
+            Symbol s = this.currentScope.resolve(ctx.IDENT().getText());
+            if(s== null) {
+                if (ctx.function_invocate().WRITELN() != null || ctx.function_invocate().WRITE() != null) {
+                    System.err.println("A variável " + ctx.IDENT().getText() + " na linha " + ctx.IDENT().getSymbol().getLine() + " é do tipo PFLOAT e não se pode atribuir WRITE/WRITELN");
+                }
+            }
         }
         exprType.put(ctx, Symbol.PType.PFLOAT);
     }
@@ -595,24 +608,30 @@ public class TypeChecker extends algBaseListener {
     public void exitPonteiro_cadeia(alg.Ponteiro_cadeiaContext ctx) {
         if(ctx.getChildCount() == 6 && ctx.function_invocate()!=null)
         {
-            if(ctx.function_invocate().getChild((ctx.function_invocate().getChildCount()-1)).getText().equals((")")))
-            {
-                String variableName = ctx.IDENT().getText();
-                String name = ctx.function_invocate().IDENT().getText();
-                Symbol s = this.currentScope.resolve(name);
-                if(s != null) {
-                    if (s.type.equals(Symbol.PType.VOID)) {
-                        System.err.println("A função " + name + " na linha " + ctx.start.getLine() + " é do tipo VOID e não retorna nenhum valor");
-                        ++this.semanticErrors;
-                        return;
-                    }
+            if(ctx.expr(0) != null) {
+                if (ctx.function_invocate().getChild((ctx.function_invocate().getChildCount() - 1)).getText().equals((")"))) {
+                    String variableName = ctx.IDENT().getText();
+                    String name = ctx.function_invocate().IDENT().getText();
+                    Symbol s = this.currentScope.resolve(name);
+                    if (s != null) {
+                        if (s.type.equals(Symbol.PType.VOID)) {
+                            System.err.println("A função " + name + " na linha " + ctx.start.getLine() + " é do tipo VOID e não retorna nenhum valor");
+                            ++this.semanticErrors;
+                            return;
+                        }
 
-                    if(s.type.equals(Symbol.PType.FLOAT) || s.type.equals(Symbol.PType.BOOL) || s.type.equals(Symbol.PType.STRING) || s.type.equals(Symbol.PType.PFLOAT) || s.type.equals(Symbol.PType.INT) || s.type.equals(Symbol.PType.PINT))
-                    {
-                        System.err.println("A variavel " + variableName + " na linha " + ctx.start.getLine() + " é do tipo PSTRING"  + " e a função é do tipo "  +  s.type);
-                        ++this.semanticErrors;
-                        return;
+                        if (s.type.equals(Symbol.PType.FLOAT) || s.type.equals(Symbol.PType.BOOL) || s.type.equals(Symbol.PType.STRING) || s.type.equals(Symbol.PType.PFLOAT) || s.type.equals(Symbol.PType.INT) || s.type.equals(Symbol.PType.PINT)) {
+                            System.err.println("A variavel " + variableName + " na linha " + ctx.start.getLine() + " é do tipo PSTRING" + " e a função é do tipo " + s.type);
+                            ++this.semanticErrors;
+                            return;
+                        }
                     }
+                }
+            }
+            Symbol s = this.currentScope.resolve(ctx.IDENT().getText());
+            if(s== null) {
+                if (ctx.function_invocate().WRITELN() != null || ctx.function_invocate().WRITE() != null) {
+                    System.err.println("A variável " + ctx.IDENT().getText() + " na linha " + ctx.IDENT().getSymbol().getLine() + " é do tipo PSTRING e não se pode atribuir WRITE/WRITELN");
                 }
             }
 
@@ -784,9 +803,11 @@ public class TypeChecker extends algBaseListener {
                     ++this.semanticErrors;
                 }else{
                     Symbol.PType value_type = (Symbol.PType)this.exprType.get(ctx.body().instructions(count-1).ctrl_instruct().expressions_list2().expr());
-                    if(!type_function.equals(value_type.toString())){
-                        System.err.println("Função " + "'" + ctx.function_declare().IDENT() + "'" + " na linha " + ctx.function_declare().start.getLine() + " é do tipo " + type_function + "," + " e o valor retornado é do tipo " + value_type.toString());
-                        ++this.semanticErrors;
+                    if(value_type !=null) {
+                        if (!type_function.equals(value_type.toString())) {
+                            System.err.println("Função " + "'" + ctx.function_declare().IDENT() + "'" + " na linha " + ctx.function_declare().start.getLine() + " é do tipo " + type_function + "," + " e o valor retornado é do tipo " + value_type.toString());
+                            ++this.semanticErrors;
+                        }
                     }
                 }
             }else{
