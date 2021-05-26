@@ -561,6 +561,7 @@ public class TypeChecker extends algBaseListener {
             if(s== null) {
                 if (ctx.function_invocate().WRITELN() != null || ctx.function_invocate().WRITE() != null) {
                     System.err.println("A variável " + ctx.IDENT().getText() + " na linha " + ctx.IDENT().getSymbol().getLine() + " é do tipo PINT e não se pode atribuir WRITE/WRITELN");
+                    ++this.semanticErrors;
                 }
             }
 
@@ -598,6 +599,7 @@ public class TypeChecker extends algBaseListener {
             if(s== null) {
                 if (ctx.function_invocate().WRITELN() != null || ctx.function_invocate().WRITE() != null) {
                     System.err.println("A variável " + ctx.IDENT().getText() + " na linha " + ctx.IDENT().getSymbol().getLine() + " é do tipo PFLOAT e não se pode atribuir WRITE/WRITELN");
+                    ++this.semanticErrors;
                 }
             }
         }
@@ -632,6 +634,7 @@ public class TypeChecker extends algBaseListener {
             if(s== null) {
                 if (ctx.function_invocate().WRITELN() != null || ctx.function_invocate().WRITE() != null) {
                     System.err.println("A variável " + ctx.IDENT().getText() + " na linha " + ctx.IDENT().getSymbol().getLine() + " é do tipo PSTRING e não se pode atribuir WRITE/WRITELN");
+                    ++this.semanticErrors;
                 }
             }
 
@@ -765,23 +768,31 @@ public class TypeChecker extends algBaseListener {
                 int count2 = ctx.instructions(i).sub_block().instructions().size();
                 for (int j = 0; j < count2; j++) {
                     if (ctx.instructions(i).sub_block().instructions(j).ctrl_instruct() != null && ctx.instructions(i).sub_block().instructions(count2-1).ctrl_instruct() != null) {
-                        if ((ctx.instructions(i).sub_block().instructions(count2-1).ctrl_instruct().RETURN() != null) && (ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().RETURN() != null && j != count2 - 1))
+                        if ((ctx.instructions(i).sub_block().instructions(count2-1).ctrl_instruct().RETURN() != null) && (ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().RETURN() != null && j != count2 - 1)) {
                             System.err.println("Só pode ser invocado um return no subbloco, existe outro na linha " + ctx.instructions(i).sub_block().instructions(j).start.getLine());
+                            ++this.semanticErrors;
+                        }
                     }if(ctx.instructions(i).sub_block().instructions(j).ctrl_instruct() != null && ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().LEAVE() != null) {
-                        System.err.println("Intrução LEAVE da linha " + ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " apenas pode ser chamado num ciclo");
+                        System.err.println("Instrução LEAVE da linha " + ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " apenas pode ser chamado num ciclo");
+                        ++this.semanticErrors;
                     }if(ctx.instructions(i).sub_block().instructions(j).ctrl_instruct() != null && ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().RESTART() != null ){
-                        System.err.println("Intrução RESTART da linha " + ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " apenas pode ser chamado num ciclo");
+                        System.err.println("Instrução RESTART da linha " + ctx.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " apenas pode ser chamado num ciclo");
+                        ++this.semanticErrors;
                     }
                 }
             }else{
                 if(ctx.instructions(i).ctrl_instruct() != null && ctx.instructions(count-1).ctrl_instruct() != null) {
-                    if ((ctx.instructions(count-1).ctrl_instruct().RETURN() != null) && (ctx.instructions(i).ctrl_instruct().RETURN() != null && i != count - 1))
+                    if ((ctx.instructions(count-1).ctrl_instruct().RETURN() != null) && (ctx.instructions(i).ctrl_instruct().RETURN() != null && i != count - 1)) {
                         System.err.println("Só pode ser invocado um return na função, existe outro na linha " + ctx.instructions(i).start.getLine());
+                        ++this.semanticErrors;
+                    }
                 }
             }if(ctx.instructions(i).ctrl_instruct() != null && ctx.instructions(i).ctrl_instruct().LEAVE() != null) {
-                System.err.println("Intrução LEAVE da linha " + ctx.instructions(i).ctrl_instruct().start.getLine() + " apenas pode ser chamado num ciclo");
+                System.err.println("Instrução LEAVE da linha " + ctx.instructions(i).ctrl_instruct().start.getLine() + " apenas pode ser chamado num ciclo");
+                ++this.semanticErrors;
             }if(ctx.instructions(i).ctrl_instruct() != null && ctx.instructions(i).ctrl_instruct().RESTART() != null ){
-                System.err.println("Intrução RESTART da linha " + ctx.instructions(i).ctrl_instruct().start.getLine() + " apenas pode ser chamado num ciclo");
+                System.err.println("Instrução RESTART da linha " + ctx.instructions(i).ctrl_instruct().start.getLine() + " apenas pode ser chamado num ciclo");
+                ++this.semanticErrors;
             }
         }
     }
