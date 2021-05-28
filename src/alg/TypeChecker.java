@@ -827,13 +827,11 @@ public class TypeChecker extends algBaseListener {
     public void exitEpilogo(alg.EpilogoContext ctx) { }
     public void enterFunction(alg.FunctionContext ctx) { }
 
-
     public void exitFunction(alg.FunctionContext ctx) {
         Symbol.PType type_function = null;
-        alg.BodyContext a = null;
+        alg.BodyContext a = ctx.body();
         if (ctx.function_declare() != null) {
             type_function = (Symbol.PType) this.exprType.get(ctx.function_declare());
-            a = ctx.body();
         } else {
             type_function = Symbol.PType.INT;
         }

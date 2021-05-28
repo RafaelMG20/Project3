@@ -13,7 +13,7 @@ fcall
 
   //functionSpecial : INT ALG LP argsSpecial RP body;
   //argsSpecial: ARG1;
-  functionSpecial : INT ALG LP INT IDENT VIRGULA MENORQ STRING MAIORQ IDENT RP body;
+  functionSpecial : INT ALG LP INT IDENT VIRGULA MENORQ STRING MAIORQ IDENT RP;
 
 
 // RECURSÃO À ESQUERDA IMEDIATA
@@ -111,11 +111,11 @@ type: (INT|FLOAT|BOOL|STRING|VOID|(MENORQ (INT|FLOAT|STRING) MAIORQ));
 
 body : L_BRACE (variable | function_invocate PONTO_VIRGULA | instructions|defineNull)* instructions R_BRACE;
 //foi adicionado o body2
-body2 : L_BRACE (variable | function_invocate PONTO_VIRGULA | instructions)* R_BRACE;
-prologo: AT_SIGN body2;
-epilogo: D_MAIORQ body2;
+//body2 : L_BRACE (variable | function_invocate PONTO_VIRGULA | instructions | defineNull)* R_BRACE;
+prologo: AT_SIGN body;
+epilogo: D_MAIORQ body;
 
-function: (function_declare prologo? body epilogo?) | functionSpecial;
+function: (function_declare|functionSpecial) prologo? body epilogo?;
 
 
 function_invocate: ((IDENT LP (expr (',' expr)*)? RP) | (AT_SIGN LP RP) | (SIZEOF LP expr RP)

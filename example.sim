@@ -1,10 +1,21 @@
-<int> rafa(int n, <string> args)
+string oi = 'ola';
+int alg(int n, <string> args)
 {
-<int> test = 2;
-test = null;
-
-return test;
+return 1;
 }
+
+
+float rafa()
+@{
+return oi;
+}
+{
+return 2.2;
+}
+>>{
+
+}
+
 
 
 
