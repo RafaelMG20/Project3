@@ -1,7 +1,7 @@
 <int> rafa(int n, <string> args)
 {
 <int> test = 2;
-//test = null;
+test = null;
 
 return test;
 }
