@@ -204,8 +204,16 @@ public class TypeChecker extends algBaseListener {
     public void exitParen(alg.ParenContext ctx) {
         Symbol.PType e1 = (Symbol.PType)this.exprType.get(ctx.expr().getChild(0));
         Symbol.PType e2 = (Symbol.PType)this.exprType.get(ctx.expr().getChild(2));
-        String operator = ((ParseTree)ctx.expr().children.get(1)).getText();
-        this.verifyPrimitiveArithmeticOperator(ctx, operator, e1, e2);
+        if(e2!=null)
+        {
+            String operator = ((ParseTree)ctx.expr().children.get(1)).getText();
+            this.verifyPrimitiveArithmeticOperator(ctx, operator, e1, e2);
+        }
+
+        else
+            exprType.put(ctx,e1);
+
+
     }
 
     public void enterIdentifier(alg.IdentifierContext ctx) { }
@@ -277,7 +285,7 @@ public class TypeChecker extends algBaseListener {
 
     public void exitInteiro(alg.InteiroContext ctx)
     {
-        if(ctx.equals().getChildCount() == 2 && ctx.equals().function_invocate()!=null) {
+        if(ctx.equals()!=null && ctx.equals().getChildCount() == 2 && ctx.equals().function_invocate()!=null) {
             String variableName = ctx.IDENT().get(0).getText();
             Symbol oi = this.currentScope.resolve(variableName);
             if (oi != null) {
@@ -1019,7 +1027,14 @@ public class TypeChecker extends algBaseListener {
     {
         if(ctx.inteiro() != null)
         {
+            /*if(ctx.inteiro().getChild(2).getText().equals("["))
+            {
+                if(defineSymbol(ctx,new Symbol(ctx.getChild(0).getChild(0).getText(),ctx.getChild(0).getChild(1).getText()))) {
+                    exprType.put(ctx, Symbol.PType.INT);
+                    return;
+                }
 
+            }*/
             if(ctx.inteiro().INDEX_POINT_L() != null)
             {
                 Symbol s1 = this.currentScope.resolve(ctx.inteiro().getChild(0).getText());

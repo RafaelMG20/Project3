@@ -1,14 +1,10 @@
 int z()
 {
 
-<string> b = write(2);
-{
-return 0;
-return b;
-return c(2);
-}
-return;
-return vasco(2);
+string b = write(2);
+string c= 'ola';
+if(b == c)
+then leave;
 return 2;
 }
 
