@@ -28,6 +28,16 @@ public interface algListener extends ParseTreeListener {
 	 */
 	void exitFcall(alg.FcallContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link alg#functionSpecial}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionSpecial(alg.FunctionSpecialContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link alg#functionSpecial}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionSpecial(alg.FunctionSpecialContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code Call}
 	 * labeled alternative in {@link alg#expr}.
 	 * @param ctx the parse tree

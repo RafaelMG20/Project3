@@ -1,7 +1,8 @@
 lexer grammar algLexer;
 
 
-
+N : 'n';
+ARGUM : 'args';
 
 INT : 'int';
 BOOL : 'bool';
@@ -91,6 +92,9 @@ D_MAIORQ: '>>';
 
 WS : [ \t\r\n] -> skip;
 COMMENTS : '//'(~'\n')*?'\n' -> skip;
+
+
+
 
 
 

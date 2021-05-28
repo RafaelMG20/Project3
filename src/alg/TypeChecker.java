@@ -1258,6 +1258,41 @@ public class TypeChecker extends algBaseListener {
         }
     }
 
+    public void enterFunctionSpecial(alg.FunctionSpecialContext ctx) {
+        if(ctx.ALG() == null)
+        {
+            System.err.println("A função alg deve ser definida para iniciar o programa.");
+            ++this.semanticErrors;
+
+            String name = ctx.N().getText();
+            String type = ctx.INT(0).getText();
+            String name2 = ctx.ARGUM().getText();
+            String type2 = "pstring";
+
+            FunctionSymbol f = new FunctionSymbol("int", "alg");
+            this.defineSymbol(ctx, f);
+            this.currentFunction = f;
+            this.currentScope = new Scope(this.currentScope);
+            this.exprType.put(ctx, f.type);
+
+            Symbol parameter = new Symbol(type, name);
+            if (defineArgs(ctx, parameter) && this.currentFunction != null) {
+                this.currentFunction.arguments.add(parameter);
+            }
+
+            Symbol parameter2 = new Symbol(type2, name2);
+            if (defineArgs(ctx, parameter2) && this.currentFunction != null) {
+                this.currentFunction.arguments.add(parameter2);
+            }
+
+
+
+
+        }
+    }
+
+    public void exitFunctionSpecial(alg.FunctionSpecialContext ctx) { }
+
     private boolean isConvertibleTo(Symbol.PType from, Symbol.PType to) {
         if (from == to) {
             return true;

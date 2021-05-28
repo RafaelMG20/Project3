@@ -2,7 +2,7 @@ parser grammar alg;
 
 options{tokenVocab=algLexer;}
 
-programa : fcall* variable* function*  EOF;
+programa : functionSpecial+ fcall* variable* function*  EOF;
 
 
 fcall
@@ -13,7 +13,7 @@ fcall
 
 
 
-
+functionSpecial : INT ALG LP INT N VIRGULA MENORQ STRING MAIORQ ARGUM RP body;
 // RECURSÃO À ESQUERDA IMEDIATA
 /*expr : expr SOMA_SUB expr2 | expr2;
 expr2 : expr2 MULT_DIV expr3 | expr3;
@@ -113,6 +113,7 @@ prologo: AT_SIGN body2;
 epilogo: D_MAIORQ body2;
 
 function: function_declare prologo? body epilogo?;
+
 
 function_invocate: ((IDENT LP (expr (',' expr)*)? RP) | (AT_SIGN LP RP) | (SIZEOF LP expr RP)
 | ((WRITE|WRITELN)LP expr (',' expr)* RP));
