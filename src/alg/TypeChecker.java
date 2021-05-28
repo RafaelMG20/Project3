@@ -101,7 +101,13 @@ public class TypeChecker extends algBaseListener {
         this.currentScope = globalScope;
         this.semanticErrors = 0;
     }
-    public void exitPrograma(alg.ProgramaContext ctx) {//System.out.println(this.currentScope.toString());
+    public void exitPrograma(alg.ProgramaContext ctx) {
+        //System.out.println(this.currentScope.toString());
+        if(ctx.functionSpecial()==null)
+        {
+            System.err.println("A função alg deve estar definida para iniciar o programa.");
+            ++this.semanticErrors;
+        }
         }
     public void enterFcall(alg.FcallContext ctx) { }
     public void exitFcall(alg.FcallContext ctx) { }
@@ -1259,15 +1265,10 @@ public class TypeChecker extends algBaseListener {
     }
 
     public void enterFunctionSpecial(alg.FunctionSpecialContext ctx) {
-        if(ctx.ALG() == null)
-        {
+
             System.err.println("A função alg deve ser definida para iniciar o programa.");
             ++this.semanticErrors;
 
-            String name = ctx.N().getText();
-            String type = ctx.INT(0).getText();
-            String name2 = ctx.ARGUM().getText();
-            String type2 = "pstring";
 
             FunctionSymbol f = new FunctionSymbol("int", "alg");
             this.defineSymbol(ctx, f);
@@ -1275,20 +1276,21 @@ public class TypeChecker extends algBaseListener {
             this.currentScope = new Scope(this.currentScope);
             this.exprType.put(ctx, f.type);
 
-            Symbol parameter = new Symbol(type, name);
-            if (defineArgs(ctx, parameter) && this.currentFunction != null) {
-                this.currentFunction.arguments.add(parameter);
-            }
-
-            Symbol parameter2 = new Symbol(type2, name2);
-            if (defineArgs(ctx, parameter2) && this.currentFunction != null) {
-                this.currentFunction.arguments.add(parameter2);
-            }
 
 
+    }
 
-
+    public void exitArgsSpecial(alg.ArgsSpecialContext ctx) {
+        Symbol parameter = new Symbol("int", "n");
+        if (defineArgs(ctx, parameter) && this.currentFunction != null) {
+            this.currentFunction.arguments.add(parameter);
         }
+
+        Symbol parameter2 = new Symbol("pstring", "args");
+        if (defineArgs(ctx, parameter2) && this.currentFunction != null) {
+            this.currentFunction.arguments.add(parameter2);
+        }
+
     }
 
     public void exitFunctionSpecial(alg.FunctionSpecialContext ctx) { }

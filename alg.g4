@@ -13,7 +13,8 @@ fcall
 
 
 
-functionSpecial : INT ALG LP INT N VIRGULA MENORQ STRING MAIORQ ARGUM RP body;
+functionSpecial : INT ALG LP argsSpecial RP body;
+argsSpecial: ARG1;
 // RECURSÃO À ESQUERDA IMEDIATA
 /*expr : expr SOMA_SUB expr2 | expr2;
 expr2 : expr2 MULT_DIV expr3 | expr3;

@@ -1,10 +1,6 @@
-int z()
+int alg(int n, <string> args)
 {
-
-string b = write(2);
-string c= 'ola';
-if(b == c)
-then leave;
+n = 3;
 return 2;
 }
 
