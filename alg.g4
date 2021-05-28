@@ -51,6 +51,7 @@ expr: ID '(' exprList? ')'      # Call
 
 exprList : expr (',' expr)*;
 
+defineNull : IDENT EQUAL NULL PONTO_VIRGULA;
 // exemplo de não fatoração À esquerda
 
 //inteiro : (INT IDENT ('[' (IDENT|LITERAL_INTEIRO) ']')? (EQUAL (expr)*)?);
@@ -108,7 +109,7 @@ args : arg (',' arg)*;
 function_declare : type IDENT LP args? RP;
 type: (INT|FLOAT|BOOL|STRING|VOID|(MENORQ (INT|FLOAT|STRING) MAIORQ));
 
-body : L_BRACE (variable | function_invocate PONTO_VIRGULA | instructions)* instructions R_BRACE;
+body : L_BRACE (variable | function_invocate PONTO_VIRGULA | instructions|defineNull)* instructions R_BRACE;
 //foi adicionado o body2
 body2 : L_BRACE (variable | function_invocate PONTO_VIRGULA | instructions)* R_BRACE;
 prologo: AT_SIGN body2;

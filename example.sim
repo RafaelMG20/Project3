@@ -1,13 +1,9 @@
-int alg(int n, <string> args)
+<int> rafa(int n, <string> args)
 {
-n = 3;
-args = 'ola';
-return 0;
-}
-int rafa(int nn, <string> argsss)
-{
-n = 3;
-return 2;
+<int> test = 2;
+//test = null;
+
+return test;
 }
 
 

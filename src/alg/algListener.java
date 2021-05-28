@@ -204,6 +204,16 @@ public interface algListener extends ParseTreeListener {
 	 */
 	void exitExprList(alg.ExprListContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link alg#defineNull}.
+	 * @param ctx the parse tree
+	 */
+	void enterDefineNull(alg.DefineNullContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link alg#defineNull}.
+	 * @param ctx the parse tree
+	 */
+	void exitDefineNull(alg.DefineNullContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link alg#equals}.
 	 * @param ctx the parse tree
 	 */

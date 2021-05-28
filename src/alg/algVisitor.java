@@ -126,6 +126,12 @@ public interface algVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExprList(alg.ExprListContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link alg#defineNull}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDefineNull(alg.DefineNullContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link alg#equals}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

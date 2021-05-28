@@ -220,6 +220,18 @@ public class algBaseListener implements algListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDefineNull(alg.DefineNullContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDefineNull(alg.DefineNullContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterEquals(alg.EqualsContext ctx) { }
 	/**
 	 * {@inheritDoc}
