@@ -1324,6 +1324,20 @@ public class TypeChecker extends algBaseListener {
 
 
     public void exitFunctionSpecial(alg.FunctionSpecialContext ctx) {
+        if(ctx.body() != null){
+            int count = ctx.body().instructions().size();
+            if(ctx.body().instructions(count-1).ctrl_instruct() != null){
+                if(ctx.body().instructions(count-1).ctrl_instruct().expressions_list2() != null){
+                    Symbol.PType value_type = (Symbol.PType)this.exprType.get(ctx.body().instructions(count-1).ctrl_instruct().expressions_list2().expr());
+                    if(value_type != null && !value_type.toString().equals("INT")){
+                        System.err.println("Return na linha "+ ctx.body().instructions(count-1).ctrl_instruct().start.getLine() +" é do tipo "+ value_type.toString()+ " e deve ser do tipo INT");
+                    }
+                }
+                else{
+                    System.err.println("Return deve retornar valor do tipo INT");
+                }
+            }
+        }
         this.currentFunction = null;
         this.currentScope = this.currentScope.getParentScope();
     }
