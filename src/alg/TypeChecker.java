@@ -835,7 +835,7 @@ public class TypeChecker extends algBaseListener {
             type_function = ctx.function_declare().type().getText().toUpperCase(Locale.ROOT);
             a = ctx.body();
         }
-        else {
+        if(ctx.functionSpecial()!= null) {
             type_function = "INT";
             a = ctx.functionSpecial().body();
         }
