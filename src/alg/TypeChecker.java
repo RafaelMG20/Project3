@@ -822,9 +822,119 @@ public class TypeChecker extends algBaseListener {
     }
 
     public void enterPrologo(alg.PrologoContext ctx) { }
-    public void exitPrologo(alg.PrologoContext ctx) { }
+    public void exitPrologo(alg.PrologoContext ctx) {
+        alg.BodyContext a = ctx.body();
+        Symbol.PType type_function = this.exprType.get(ctx.getParent().getChild(0));
+        int count = a.instructions().size();
+        for (int i = 0; i < count; i++) {
+            if (a.instructions(i).ctrl_instruct() != null) {
+                if (a.instructions(i).ctrl_instruct().RETURN() != null && a.instructions(i).ctrl_instruct().expressions_list2() != null) {
+                    Symbol.PType value_type = (Symbol.PType) this.exprType.get(a.instructions(i).ctrl_instruct().expressions_list2().expr());
+                    if (type_function != Symbol.PType.VOID && value_type != null && value_type != type_function) {
+                        System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " retorna valores do tipo " + value_type.toString() + " e deve retornar do tipo " + type_function.toString());
+                        ++this.semanticErrors;
+                    }
+                    if (value_type == null) {
+                        System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " retorna valores indefinidos e deve retornar do tipo " + type_function.toString());
+                        ++this.semanticErrors;
+                    }
+                    if (type_function == Symbol.PType.VOID) {
+                        System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " não deve retornar valores, função tipo " + type_function.toString());
+                        ++this.semanticErrors;
+                    }
+                } else {
+                    if (type_function != Symbol.PType.VOID) {
+                        System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " deve retornar valor");
+                        ++this.semanticErrors;
+                    }
+                }
+            }
+            if (a.instructions(i).sub_block() != null) {
+                int count_block = a.instructions(i).sub_block().instructions().size();
+                for (int j = 0; j < count_block; j++) {
+                    if (a.instructions(i).sub_block().instructions(j).ctrl_instruct() != null) {
+                        if (a.instructions(i).sub_block().instructions(j).ctrl_instruct().RETURN() != null && a.instructions(i).sub_block().instructions(j).ctrl_instruct().expressions_list2() != null) {
+                            Symbol.PType value_type = (Symbol.PType) this.exprType.get(a.instructions(i).sub_block().instructions(j).ctrl_instruct().expressions_list2().expr());
+                            if (type_function != Symbol.PType.VOID && value_type != null && value_type != type_function) {
+                                System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " retorna valores do tipo " + value_type.toString() + " e deve retornar do tipo " + type_function.toString());
+                                ++this.semanticErrors;
+                            }
+                            if (value_type == null) {
+                                System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " retorna valores indefinidos e deve retornar do tipo " + type_function.toString());
+                                ++this.semanticErrors;
+                            }
+                            if (type_function == Symbol.PType.VOID) {
+                                System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " não deve retornar valores, função tipo " + type_function.toString());
+                                ++this.semanticErrors;
+                            }
+                        } else {
+                            if (type_function != Symbol.PType.VOID) {
+                                System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " deve retornar valor");
+                                ++this.semanticErrors;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     public void enterEpilogo(alg.EpilogoContext ctx) { }
-    public void exitEpilogo(alg.EpilogoContext ctx) { }
+    public void exitEpilogo(alg.EpilogoContext ctx) {
+        alg.BodyContext a = ctx.body();
+        Symbol.PType type_function = this.exprType.get(ctx.getParent().getChild(0));
+        int count = a.instructions().size();
+        for (int i = 0; i < count; i++) {
+            if (a.instructions(i).ctrl_instruct() != null) {
+                if (a.instructions(i).ctrl_instruct().RETURN() != null && a.instructions(i).ctrl_instruct().expressions_list2() != null) {
+                    Symbol.PType value_type = (Symbol.PType) this.exprType.get(a.instructions(i).ctrl_instruct().expressions_list2().expr());
+                    if (type_function != Symbol.PType.VOID && value_type != null && value_type != type_function) {
+                        System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " retorna valores do tipo " + value_type.toString() + " e deve retornar do tipo " + type_function.toString());
+                        ++this.semanticErrors;
+                    }
+                    if (value_type == null) {
+                        System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " retorna valores indefinidos e deve retornar do tipo " + type_function.toString());
+                        ++this.semanticErrors;
+                    }
+                    if (type_function == Symbol.PType.VOID) {
+                        System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " não deve retornar valores, função tipo " + type_function.toString());
+                        ++this.semanticErrors;
+                    }
+                } else {
+                    if (type_function != Symbol.PType.VOID) {
+                        System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " deve retornar valor");
+                        ++this.semanticErrors;
+                    }
+                }
+            }
+            if (a.instructions(i).sub_block() != null) {
+                int count_block = a.instructions(i).sub_block().instructions().size();
+                for (int j = 0; j < count_block; j++) {
+                    if (a.instructions(i).sub_block().instructions(j).ctrl_instruct() != null) {
+                        if (a.instructions(i).sub_block().instructions(j).ctrl_instruct().RETURN() != null && a.instructions(i).sub_block().instructions(j).ctrl_instruct().expressions_list2() != null) {
+                            Symbol.PType value_type = (Symbol.PType) this.exprType.get(a.instructions(i).sub_block().instructions(j).ctrl_instruct().expressions_list2().expr());
+                            if (type_function != Symbol.PType.VOID && value_type != null && value_type != type_function) {
+                                System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " retorna valores do tipo " + value_type.toString() + " e deve retornar do tipo " + type_function.toString());
+                                ++this.semanticErrors;
+                            }
+                            if (value_type == null) {
+                                System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " retorna valores indefinidos e deve retornar do tipo " + type_function.toString());
+                                ++this.semanticErrors;
+                            }
+                            if (type_function == Symbol.PType.VOID) {
+                                System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " não deve retornar valores, função tipo " + type_function.toString());
+                                ++this.semanticErrors;
+                            }
+                        } else {
+                            if (type_function != Symbol.PType.VOID) {
+                                System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " deve retornar valor");
+                                ++this.semanticErrors;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     public void enterFunction(alg.FunctionContext ctx) { }
 
     public void exitFunction(alg.FunctionContext ctx) {
@@ -832,67 +942,63 @@ public class TypeChecker extends algBaseListener {
         alg.BodyContext a = ctx.body();
         if (ctx.function_declare() != null) {
             type_function = (Symbol.PType) this.exprType.get(ctx.function_declare());
-        } else {
+        } if(ctx.functionSpecial()!=null) {
             type_function = Symbol.PType.INT;
         }
-
-
-            int count = a.instructions().size();
-            for (int i = 0; i < count; i++) {
-                if (a.instructions(i).ctrl_instruct() != null) {
-                    if (a.instructions(i).ctrl_instruct().RETURN() != null && a.instructions(i).ctrl_instruct().expressions_list2() != null) {
-                        Symbol.PType value_type = (Symbol.PType) this.exprType.get(a.instructions(i).ctrl_instruct().expressions_list2().expr());
-                        if (type_function != Symbol.PType.VOID && value_type != null && value_type != type_function) {
-                            System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " retorna valores do tipo " + value_type.toString() + " e deve retornar do tipo " + type_function.toString());
-                            ++this.semanticErrors;
-                        }
-                        if (value_type == null) {
-                            System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " retorna valores indefinidos e deve retornar do tipo " + type_function.toString());
-                            ++this.semanticErrors;
-                        }
-                        if (type_function == Symbol.PType.VOID) {
-                            System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " não deve retornar valores, função tipo " + type_function.toString());
-                            ++this.semanticErrors;
-                        }
-                    } else {
-                        if (type_function != Symbol.PType.VOID) {
-                            System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " deve retornar valor");
-                            ++this.semanticErrors;
-                        }
+        int count = a.instructions().size();
+        for (int i = 0; i < count; i++) {
+            if (a.instructions(i).ctrl_instruct() != null) {
+                if (a.instructions(i).ctrl_instruct().RETURN() != null && a.instructions(i).ctrl_instruct().expressions_list2() != null) {
+                    Symbol.PType value_type = (Symbol.PType) this.exprType.get(a.instructions(i).ctrl_instruct().expressions_list2().expr());
+                    if (type_function != Symbol.PType.VOID && value_type != null && value_type != type_function) {
+                        System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " retorna valores do tipo " + value_type.toString() + " e deve retornar do tipo " + type_function.toString());
+                        ++this.semanticErrors;
+                    }
+                    if (value_type == null) {
+                        System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " retorna valores indefinidos e deve retornar do tipo " + type_function.toString());
+                        ++this.semanticErrors;
+                    }
+                    if (type_function == Symbol.PType.VOID) {
+                        System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " não deve retornar valores, função tipo " + type_function.toString());
+                        ++this.semanticErrors;
+                    }
+                } else {
+                    if (type_function != Symbol.PType.VOID) {
+                        System.err.println("Return na linha " + a.instructions(i).ctrl_instruct().start.getLine() + " deve retornar valor");
+                        ++this.semanticErrors;
                     }
                 }
-
-                if (a.instructions(i).sub_block() != null) {
-                    int count_block = a.instructions(i).sub_block().instructions().size();
-                    for (int j = 0; j < count_block; j++) {
-                        if (a.instructions(i).sub_block().instructions(j).ctrl_instruct() != null) {
-                            if (a.instructions(i).sub_block().instructions(j).ctrl_instruct().RETURN() != null && a.instructions(i).sub_block().instructions(j).ctrl_instruct().expressions_list2() != null) {
-                                Symbol.PType value_type = (Symbol.PType) this.exprType.get(a.instructions(i).sub_block().instructions(j).ctrl_instruct().expressions_list2().expr());
-                                if (type_function != Symbol.PType.VOID && value_type != null && value_type != type_function) {
-                                    System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " retorna valores do tipo " + value_type.toString() + " e deve retornar do tipo " + type_function.toString());
-                                    ++this.semanticErrors;
-                                }
-                                if (value_type == null) {
-                                    System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " retorna valores indefinidos e deve retornar do tipo " + type_function.toString());
-                                    ++this.semanticErrors;
-                                }
-                                if (type_function == Symbol.PType.VOID) {
-                                    System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " não deve retornar valores, função tipo " + type_function.toString());
-                                    ++this.semanticErrors;
-                                }
-                            } else {
-                                if (type_function != Symbol.PType.VOID) {
-                                    System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " deve retornar valor");
-                                    ++this.semanticErrors;
-                                }
+            }
+            if (a.instructions(i).sub_block() != null) {
+                int count_block = a.instructions(i).sub_block().instructions().size();
+                for (int j = 0; j < count_block; j++) {
+                    if (a.instructions(i).sub_block().instructions(j).ctrl_instruct() != null) {
+                        if (a.instructions(i).sub_block().instructions(j).ctrl_instruct().RETURN() != null && a.instructions(i).sub_block().instructions(j).ctrl_instruct().expressions_list2() != null) {
+                            Symbol.PType value_type = (Symbol.PType) this.exprType.get(a.instructions(i).sub_block().instructions(j).ctrl_instruct().expressions_list2().expr());
+                            if (type_function != Symbol.PType.VOID && value_type != null && value_type != type_function) {
+                                System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " retorna valores do tipo " + value_type.toString() + " e deve retornar do tipo " + type_function.toString());
+                                ++this.semanticErrors;
+                            }
+                            if (value_type == null) {
+                                System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " retorna valores indefinidos e deve retornar do tipo " + type_function.toString());
+                                ++this.semanticErrors;
+                            }
+                            if (type_function == Symbol.PType.VOID) {
+                                System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " não deve retornar valores, função tipo " + type_function.toString());
+                                ++this.semanticErrors;
+                            }
+                        } else {
+                            if (type_function != Symbol.PType.VOID) {
+                                System.err.println("Return na linha " + a.instructions(i).sub_block().instructions(j).ctrl_instruct().start.getLine() + " deve retornar valor");
+                                ++this.semanticErrors;
                             }
                         }
                     }
                 }
             }
-            this.currentFunction = null;
-            this.currentScope = this.currentScope.getParentScope();
-
+        }
+        this.currentFunction = null;
+        this.currentScope = this.currentScope.getParentScope();
     }
 
         public void exitDefineNull(alg.DefineNullContext ctx)

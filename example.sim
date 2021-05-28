@@ -1,19 +1,18 @@
-string oi = 'ola';
+string ola = 'ola';
 int alg(int n, <string> args)
 {
 return 1;
 }
 
-
-float rafa()
+int rafa()
 @{
-return oi;
+return 0;
 }
 {
-return 2.2;
+return 0;
 }
 >>{
-
+return 0;
 }
 
 
