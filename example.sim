@@ -1,6 +1,12 @@
 int alg(int n, <string> args)
 {
 n = 3;
+args = 'ola';
+return 0;
+}
+int rafa(int nn, <string> argsss)
+{
+n = 3;
 return 2;
 }
 

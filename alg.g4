@@ -2,7 +2,7 @@ parser grammar alg;
 
 options{tokenVocab=algLexer;}
 
-programa : functionSpecial+ fcall* variable* function*  EOF;
+programa :  fcall*  variable* function*  EOF;
 
 
 fcall
@@ -11,10 +11,11 @@ fcall
     |   function_invocate     {notifyErrorListeners("Missing closing ';'");}
     ;
 
+  //functionSpecial : INT ALG LP argsSpecial RP body;
+  //argsSpecial: ARG1;
+  functionSpecial : INT ALG LP INT IDENT VIRGULA MENORQ STRING MAIORQ IDENT RP body;
 
 
-functionSpecial : INT ALG LP argsSpecial RP body;
-argsSpecial: ARG1;
 // RECURSÃO À ESQUERDA IMEDIATA
 /*expr : expr SOMA_SUB expr2 | expr2;
 expr2 : expr2 MULT_DIV expr3 | expr3;
@@ -113,7 +114,7 @@ body2 : L_BRACE (variable | function_invocate PONTO_VIRGULA | instructions)* R_B
 prologo: AT_SIGN body2;
 epilogo: D_MAIORQ body2;
 
-function: function_declare prologo? body epilogo?;
+function: (function_declare prologo? body epilogo?) | functionSpecial;
 
 
 function_invocate: ((IDENT LP (expr (',' expr)*)? RP) | (AT_SIGN LP RP) | (SIZEOF LP expr RP)
@@ -139,5 +140,7 @@ variable:
     | reais
     | cadeia_caracteres| cadeias_caracteres
     | ponteiro_inteiro | ponteiro_real | ponteiro_cadeia) PONTO_VIRGULA;
+
+
 
 

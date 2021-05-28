@@ -29,12 +29,6 @@ public interface algVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunctionSpecial(alg.FunctionSpecialContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link alg#argsSpecial}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitArgsSpecial(alg.ArgsSpecialContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code Call}
 	 * labeled alternative in {@link alg#expr}.
 	 * @param ctx the parse tree

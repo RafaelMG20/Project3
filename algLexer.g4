@@ -2,7 +2,6 @@ lexer grammar algLexer;
 
 
 
-
 INT : 'int';
 BOOL : 'bool';
 FLOAT : 'float';
@@ -92,8 +91,9 @@ D_MAIORQ: '>>';
 WS : [ \t\r\n] -> skip;
 COMMENTS : '//'(~'\n')*?'\n' -> skip;
 //ADICIONADO PARA A FUNÇÃO ESPECIAL
-ARG1 : 'int' (' ')+ 'n'(' ')* ','(' ')* '<string>' (' ')+'args';
-//ARGUM :  '<string> args';
+//ARG1 : 'int' (' ')+ 'n'(' ')* ','(' ')* '<string>' (' ')+'args'(' ')*;
+
+
 
 
 
