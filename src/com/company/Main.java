@@ -18,22 +18,22 @@ public class Main {
                         algLexer simpleLexer = new algLexer(CharStreams.fromFileName("example.sim"));
                         alg simpleParser = new alg(new CommonTokenStream(simpleLexer));
                         ParseTree tree = simpleParser.programa();
-                        System.out.println("syntatic parsing finished");
+                        System.out.println("Análise de Parser Finalizada :)");
 
                         // create a standard ANTLR parse tree walker
                         ParseTreeWalker walker = new ParseTreeWalker();
                         // create listener then feed to walker
-                        System.out.println("Type checking...");
+                        System.out.println("Analisando ... ");
                         TypeChecker listener = new TypeChecker();
                         walker.walk(listener, tree);
 
                         if(listener.semanticErrors > 0)
                         {
-                                System.out.println(listener.semanticErrors + " semantic errors found. Compilation process halted.");
+                                System.out.println(listener.semanticErrors + " Erros semânticos encontrados. Processo de compilação interrompido :(");
                                 System.exit(1);
                         }
 
-                        System.out.println("No semantic errors found");
+                        System.out.println("SEM ERROS SEMÂNTICOS :D");
 
                 }
                 catch(IOException e)

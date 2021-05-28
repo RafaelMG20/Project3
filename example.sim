@@ -1,4 +1,3 @@
-string ola = 'ola';
 int alg(int n, <string> args)
 {
 return 1;
@@ -6,7 +5,7 @@ return 1;
 
 int rafa()
 @{
-leave;
+
 return 0;
 }
 {
@@ -14,7 +13,7 @@ return 0;
 return 0;
 }
 >>{
-restart;
+
 return 0;
 }
 
