@@ -277,7 +277,7 @@ public class TypeChecker extends algBaseListener {
 
                 if(ctx.idy().getChild(0).getText().equals("?") && ctx.idy().IDENT() != null)
                 {
-                    if(s.type.equals(Symbol.PType.PINT) || s.type.equals(Symbol.PType.PSTRING) || s.type.equals(Symbol.PType.PFLOAT))
+                    if(!s.type.equals(Symbol.PType.PINT) && !s.type.equals(Symbol.PType.PSTRING) && !s.type.equals(Symbol.PType.PFLOAT))
                     {
                         System.err.println("A variavel " + name + " na linha " + ctx.start.getLine() + " é do tipo " + s.type);
                         exprType.put(ctx, Symbol.PType.ERROR);
